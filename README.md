@@ -13,14 +13,15 @@ It's tested with python 2.7 and python 3.5+
 
 Examples:
 
-```
+```text
 $ ./geolite2legacy.py -i GeoLite2-Country-CSV.zip -o GeoIP.dat
 Database type Country - Blocks IPv4 - Locale en
 wrote 306385-node trie with 300679 networks (251 distinct labels) in 8 seconds
 ```
 
 Complete usage:
-```
+
+```text
 usage: geolite2legacy.py [-h] -i INPUT_FILE -o OUTPUT_FILE [-d] [-6]
                          [-l LOCALE]
 
@@ -36,7 +37,7 @@ optional arguments:
                         locale to use for names
 ```
 
-```
+```text
 The MIT License (MIT)
 
 Copyright (c) 2015 Mark Teodoro
