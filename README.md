@@ -1,5 +1,4 @@
-geolite2legacy
-=======
+# geolite2legacy
 
 This tool will convert MaxMind GeoLite2 Database to the old legacy format.
 
@@ -11,7 +10,11 @@ You can download databases from
 
 It's tested with python 2.7 and python 3.5+
 
-Examples:
+## Limitations
+
+Python 2 CSV reader is not unicode aware, so if you want to use localized names you should opt for python3
+
+## Examples
 
 ```text
 $ ./geolite2legacy.py -i GeoLite2-Country-CSV.zip -o GeoIP.dat
@@ -19,7 +22,7 @@ Database type Country - Blocks IPv4 - Locale en
 wrote 306385-node trie with 300679 networks (251 distinct labels) in 8 seconds
 ```
 
-Complete usage:
+## Usage
 
 ```text
 usage: geolite2legacy.py [-h] -i INPUT_FILE -o OUTPUT_FILE [-d] [-6]
