@@ -45,8 +45,10 @@ cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 
 
 if sys.version_info[0] == 2:
-    def TextIOWrapper(f):
+    # noinspection PyUnusedLocal
+    def TextIOWrapper(f, encoding=None):
         return f
+
 else:
     from io import TextIOWrapper
 
@@ -359,7 +361,7 @@ if __name__ == '__main__':
             print('Selected locale not found in archive')
             sys.exit(1)
 
-        locs = TextIOWrapper(ziparchive.open(locs, 'r'))
+        locs = TextIOWrapper(ziparchive.open(locs, 'r'), encoding='utf-8')
 
     if dbtype not in RTree:
         print('{} not supported'.format(dbtype))
@@ -374,7 +376,7 @@ if __name__ == '__main__':
 
     print('Database type {} - Blocks {} - Locale {}'.format(dbtype, opts.ipv6, opts.locale))
 
-    r.load(locs, TextIOWrapper(ziparchive.open(blocks, 'r')))
+    r.load(locs, TextIOWrapper(ziparchive.open(blocks, 'r'), encoding='utf-8'))
 
     with open(opts.output_file, 'wb') as output:
         r.serialize(output)
