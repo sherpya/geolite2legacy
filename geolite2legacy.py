@@ -45,7 +45,10 @@ cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 
 
 if sys.version_info[0] == 2:
-    # noinspection PyUnusedLocal
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    # noinspection PyUnusedLocal,PyPep8Naming
     def TextIOWrapper(f, encoding=None):
         return f
 
