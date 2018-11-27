@@ -12,7 +12,8 @@ It's tested with python 2.7 and python 3.5+
 
 ## Limitations
 
-Python 2 CSV reader is not unicode aware, so if you want to use localized names you should opt for python3
+Python 2 CSV reader is not unicode aware, so utf-8 encoding is set through an hack,
+if you encounter problems, please try using python 3
 
 ## Examples
 
