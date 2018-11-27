@@ -45,16 +45,20 @@ cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 
 
 if sys.version_info[0] == 2:
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
+    # noinspection PyShadowingBuiltins,PyUnresolvedReferences
     range = xrange
 
-    # noinspection PyUnusedLocal,PyPep8Naming
+    def serialize_text(text):
+        return text
+
+    # noinspection PyPep8Naming,PyUnusedLocal
     def TextIOWrapper(f, encoding=None):
         return f
-
 else:
     from io import TextIOWrapper
+
+    def serialize_text(text):
+        return text.encode('utf-8')
 
 
 class RadixTreeNode(object):
@@ -217,9 +221,9 @@ class CityRev1RadixTree(RadixTree):
             nets = [ipaddr.IPNetwork(row['network'])]
             country_iso_code = location['country_iso_code'] or location['continent_code']
             yield nets, (country_iso_code,
-                         location['subdivision_1_name'].encode('utf-8'),  # region
-                         location['city_name'].encode('utf-8'),
-                         row['postal_code'].encode('utf-8'),
+                         serialize_text(location['subdivision_1_name']),  # region
+                         serialize_text(location['city_name']),
+                         serialize_text(row['postal_code']),
                          row['latitude'],
                          row['longitude'],
                          location['metro_code'],

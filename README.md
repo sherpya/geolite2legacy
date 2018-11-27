@@ -12,9 +12,7 @@ It's tested with python/pypy 2.7 and python 3.5+
 
 ## Limitations
 
-- Python 2 CSV reader is not unicode aware, so utf-8 encoding is set through an hack,
-if you encounter problems, please try using python 3
-- Processing may be slow, expecially for City blocks, consider using pypy, a lot faster
+Processing may be slow, expecially for City blocks, consider using pypy, it is a lot faster
 
 
 ## Examples
