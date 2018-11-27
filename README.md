@@ -8,12 +8,14 @@ directly from zip files containings CSV databases.
 You can download databases from
 [https://dev.maxmind.com/geoip/geoip2/geolite2/](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
-It's tested with python 2.7 and python 3.5+
+It's tested with python/pypy 2.7 and python 3.5+
 
 ## Limitations
 
-Python 2 CSV reader is not unicode aware, so utf-8 encoding is set through an hack,
+- Python 2 CSV reader is not unicode aware, so utf-8 encoding is set through an hack,
 if you encounter problems, please try using python 3
+- Processing may be slow, expecially for City blocks, consider using pypy, a lot faster
+
 
 ## Examples
 
