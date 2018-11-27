@@ -47,6 +47,7 @@ cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 if sys.version_info[0] == 2:
     reload(sys)
     sys.setdefaultencoding('utf-8')
+    range = xrange
 
     # noinspection PyUnusedLocal,PyPep8Naming
     def TextIOWrapper(f, encoding=None):
