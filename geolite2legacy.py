@@ -24,24 +24,39 @@
 
 from __future__ import print_function
 
-import csv
 import re
-import struct
-import logging
-import argparse
 import sys
-from collections import defaultdict
+import csv
+import struct
+import string
+import ipaddr
+import logging
+import pygeoip
+import argparse
+import unicodedata
+
 from time import time
 from zipfile import ZipFile
+from collections import defaultdict
 
-import ipaddr
-import pygeoip
+re_words = re.compile(r'\W+', re.U)
+
 
 cc_idx = dict((cc.lower(), i) for i, cc in enumerate(pygeoip.const.COUNTRY_CODES))
 cc_idx['cw'] = cc_idx['an']     # netherlands antilles / curacao
 cc_idx['uk'] = cc_idx['gb']     # uk / great britain
 cc_idx['sx'] = cc_idx['fx']     # st. martin?
 cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
+
+geoname2fips = {}
+
+
+def split_words(text):
+    return re_words.split(text)
+
+
+def remove_accents(text):
+    return ''.join(x for x in unicodedata.normalize('NFKD', text) if x in string.printable)
 
 
 if sys.version_info[0] == 2:
@@ -220,8 +235,15 @@ class CityRev1RadixTree(RadixTree):
 
             nets = [ipaddr.IPNetwork(row['network'])]
             country_iso_code = location['country_iso_code'] or location['continent_code']
+            fips_code = geoname2fips.get(location['geoname_id'])
+            if fips_code is None:
+                logging.debug('Missing fips-10-4 for {}'.format(location['subdivision_1_name']))
+                fips_code = '00'
+            else:
+                logging.debug('fips-10-4 for {} is {}'.format(location['subdivision_1_name'], fips_code))
+
             yield nets, (country_iso_code,
-                         serialize_text(location['subdivision_1_name']),  # region
+                         serialize_text(fips_code),  # region
                          serialize_text(location['city_name']),
                          serialize_text(row['postal_code']),
                          row['latitude'],
@@ -327,18 +349,25 @@ RTree = {
 }
 
 
-if __name__ == '__main__':
+def parse_fips(fipsfile):
+    with open(fipsfile) as f:
+        for row in csv.DictReader(f):
+            geoname2fips[row['geoname_id']] = row['region']
+    return geoname2fips
+
+
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
     parser.add_argument('-o', '--output-file', required=True, help='output GeoIP dat file')
+    parser.add_argument('-f', '--fips-file', required=True, help='geonameid to fips code mappings')
     parser.add_argument('-d', '--debug', action='store_true', default=False, help='debug mode')
     parser.add_argument('-6', '--ipv6', action='store_const', default='IPv4', const='IPv6', help='use ipv6 database')
-    parser.add_argument('-l', '--locale', default='en', help='locale to use for names')
     opts = parser.parse_args()
 
     tstart = time()
 
-    re_entry = re.compile('.*?/GeoLite2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
+    re_entry = re.compile(r'.*?/GeoLite2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
 
     entries = defaultdict(lambda: defaultdict(dict))
 
@@ -364,7 +393,7 @@ if __name__ == '__main__':
             print('Missing Locations or Block files, please check the archive')
             sys.exit(1)
 
-        locs = entries['Locations'].get(opts.locale)
+        locs = entries['Locations'].get('en')
         if locs is None:
             print('Selected locale not found in archive')
             sys.exit(1)
@@ -382,7 +411,9 @@ if __name__ == '__main__':
         print('The selected block file not found in archive')
         sys.exit(1)
 
-    print('Database type {} - Blocks {} - Locale {}'.format(dbtype, opts.ipv6, opts.locale))
+    parse_fips(opts.fips_file)
+
+    print('Database type {} - Blocks {}'.format(dbtype, opts.ipv6))
 
     r.load(locs, TextIOWrapper(ziparchive.open(blocks, 'r'), encoding='utf-8'))
 
@@ -393,3 +424,7 @@ if __name__ == '__main__':
 
     print('wrote %d-node trie with %d networks (%d distinct labels) in %d seconds' % (
         len(r.segments), r.netcount, len(r.data_offsets), tstop - tstart))
+
+
+if __name__ == '__main__':
+    main()
