@@ -2,7 +2,7 @@
 # The MIT License (MIT)
 #
 # Copyright (c) 2015 Mark Teodoro
-# Copyright (c) 2018 Gianluigi Tiesi
+# Copyright (c) 2018-2019 Gianluigi Tiesi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,11 @@ import re
 import sys
 import csv
 import struct
-import string
+import codecs
 import ipaddr
 import logging
 import pygeoip
 import argparse
-import unicodedata
 
 from time import time
 from zipfile import ZipFile
@@ -49,22 +48,23 @@ cc_idx['sx'] = cc_idx['fx']     # st. martin?
 cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 
 geoname2fips = {}
+output_encoding = 'utf-8'
 
 
-def split_words(text):
-    return re_words.split(text)
-
-
-def remove_accents(text):
-    return ''.join(x for x in unicodedata.normalize('NFKD', text) if x in string.printable)
+def serialize_text(text):
+    try:
+        return text.encode(output_encoding)
+    except UnicodeEncodeError:
+        print('Warning cannot encode {!r} using {}'.format(text, output_encoding))
+        return text.encode(output_encoding, 'replace')
 
 
 if sys.version_info[0] == 2:
     # noinspection PyShadowingBuiltins,PyUnresolvedReferences
     range = xrange
 
-    def serialize_text(text):
-        return text
+    def decode_text(text):
+        return text.decode('utf-8')
 
     # noinspection PyPep8Naming,PyUnusedLocal
     def TextIOWrapper(f, encoding=None):
@@ -72,8 +72,8 @@ if sys.version_info[0] == 2:
 else:
     from io import TextIOWrapper
 
-    def serialize_text(text):
-        return text.encode('utf-8')
+    def decode_text(text):
+        return text
 
 
 class RadixTreeNode(object):
@@ -207,8 +207,10 @@ class ASNRadixTree(RadixTree):
     def gen_nets(self, locations, infile):
         for row in csv.DictReader(infile):
             nets = [ipaddr.IPNetwork(row['network'])]
-            asn = 'AS{} {}'.format(row['autonomous_system_number'], row['autonomous_system_organization'])
-            yield nets, (asn.encode('utf-8'),)
+            org = decode_text(row['autonomous_system_organization'])
+            asn = row['autonomous_system_number']
+            entry = u'AS{} {}'.format(asn, org)
+            yield nets, (serialize_text(entry),)
 
     def encode(self, data):
         return data + b'\0'
@@ -244,7 +246,7 @@ class CityRev1RadixTree(RadixTree):
 
             yield nets, (country_iso_code,
                          serialize_text(fips_code),  # region
-                         serialize_text(location['city_name']),
+                         serialize_text(decode_text(location['city_name'])),
                          serialize_text(row['postal_code']),
                          row['latitude'],
                          row['longitude'],
@@ -360,12 +362,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
     parser.add_argument('-o', '--output-file', required=True, help='output GeoIP dat file')
-    parser.add_argument('-f', '--fips-file', required=True, help='geonameid to fips code mappings')
+    parser.add_argument('-f', '--fips-file', help='geonameid to fips code mappings')
+    parser.add_argument('-e', '--encoding', help='encoding to use for the output rather than utf-8')
     parser.add_argument('-d', '--debug', action='store_true', default=False, help='debug mode')
     parser.add_argument('-6', '--ipv6', action='store_const', default='IPv4', const='IPv6', help='use ipv6 database')
     opts = parser.parse_args()
 
-    tstart = time()
+    if opts.encoding:
+        global output_encoding
+        try:
+            codecs.lookup(opts.encoding)
+        except LookupError as e:
+            print(e)
+            sys.exit(1)
+        output_encoding = opts.encoding
 
     re_entry = re.compile(r'.*?/GeoLite2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
 
@@ -411,9 +421,15 @@ def main():
         print('The selected block file not found in archive')
         sys.exit(1)
 
-    parse_fips(opts.fips_file)
+    if dbtype != 'ASN':
+        if opts.fips_file:
+            parse_fips(opts.fips_file)
+        else:
+            print('You need to specify geoname2fips.csv file')
+            sys.exit(1)
 
-    print('Database type {} - Blocks {}'.format(dbtype, opts.ipv6))
+    tstart = time()
+    print('Database type {} - Blocks {} - Encoding: {}'.format(dbtype, opts.ipv6, output_encoding))
 
     r.load(locs, TextIOWrapper(ziparchive.open(blocks, 'r'), encoding='utf-8'))
 
