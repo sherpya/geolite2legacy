@@ -100,7 +100,7 @@ FIPS_COUNTRIES = {
     'CUBA': 'CU',
     'CYPRUS': 'CY',
     'CZECHIA': 'EZ',
-    'DEMOCRATIC REPUBLIC OF TIMOR-LESTE': 'TT',
+    'DEMOCRATIC REPUBLIC OF TIMOR LESTE': 'TT',
     'DENMARK': 'DA',
     'DHEKELIA SOVEREIGN BASE AREA': 'DX',
     'DJIBOUTI': 'DJ',
@@ -140,7 +140,7 @@ FIPS_COUNTRIES = {
     'GUATEMALA': 'GT',
     'GUERNSEY': 'GK',
     'GUINEA': 'GV',
-    'GUINEA-BISSAU': 'PU',
+    'GUINEA BISSAU': 'PU',
     'GUYANA': 'GY',
     'HAITI': 'HA',
     'HASHEMITE KINGDOM OF JORDAN': 'JO',
@@ -220,7 +220,6 @@ FIPS_COUNTRIES = {
     'OMAN': 'MU',
     'PAKISTAN': 'PK',
     'PALAU': 'PS',
-    'PALESTINE': 'GZ',
     'PALMYRA ATOLL': 'LQ',
     'PANAMA': 'PM',
     'PAPUA NEW GUINEA': 'PP',
@@ -272,7 +271,7 @@ FIPS_COUNTRIES = {
     'SWEDEN': 'SW',
     'SWITZERLAND': 'SZ',
     'SYRIA': 'SY',
-    'SÃO TOMÉ AND PRÍNCIPE': 'TP',
+    'SAO TOME AND PRINCIPE': 'TP',
     'TAIWAN': 'TW',
     'TAJIKISTAN': 'TI',
     'TANZANIA': 'TZ',
@@ -316,14 +315,32 @@ COUNTRY_IGNORE = (
     'CURACAO',
     'SINT MAARTEN',
     'U.S. MINOR OUTLYING ISLANDS',
+    'PALESTINE',  # WE? no entries on wikipedia
 
-    # empty in fips data
+    # empty in fips csv
     'AMERICAN SAMOA',
     'COOK ISLANDS',
-    'DEMOCRATIC REPUBLIC OF TIMOR-LESTE',
+    'DEMOCRATIC REPUBLIC OF TIMOR LESTE',
     'FRENCH POLYNESIA',
     'FRENCH SOUTHERN TERRITORIES',
+    'HONG KONG',
     'MALTA',
+    'MARSHALL ISLANDS',
+    'MONTENEGRO',
+    'NEW CALEDONIA',
+    'NORTHERN MARIANA ISLANDS',
+    'SAINT PIERRE AND MIQUELON',
+    'SINGAPORE',
+    'SVALBARD AND JAN MAYEN',
+    'TOKELAU',
+    'TUVALU',
+    'U.S. VIRGIN ISLANDS',
+    'WALLIS AND FUTUNA',
+
+    # missing in fips csv
+    'ISLE OF MAN',
+    'MYANMAR',
+    'SOUTH SUDAN',
 
     # wip
     'GEORGIA',
@@ -333,11 +350,10 @@ COUNTRY_IGNORE = (
     'GRENADA',
     'GUATEMALA',
     'GUINEA',
-    'GUINEA-BISSAU',
+    'GUINEA BISSAU',
     'HAITI',
     'HASHEMITE KINGDOM OF JORDAN',
     'HONDURAS',
-    'HONG KONG',
     'HUNGARY',
     'ICELAND',
     'INDIA',
@@ -347,15 +363,12 @@ COUNTRY_IGNORE = (
     'IRELAND',
     'ISRAEL',
     'IVORY COAST',
-    'JAMAICA',
-    'JAPAN',
     'KAZAKHSTAN',
     'KENYA',
     'KUWAIT',
     'KYRGYZSTAN',
     'LAOS',
     'LATVIA',
-    'LEBANON',
     'LIBERIA',
     'LIBYA',
     'LUXEMBOURG',
@@ -364,30 +377,18 @@ COUNTRY_IGNORE = (
     'MALAWI',
     'MALAYSIA',
     'MALDIVES',
-    'MALI',
-    'MARSHALL ISLANDS',
     'MAURITANIA',
     'MEXICO',
     'MONGOLIA',
-    'MONTENEGRO',
     'MOROCCO',
     'MOZAMBIQUE',
     'NAMIBIA',
     'NEPAL',
-    'NETHERLANDS',
-    'NEW CALEDONIA',
-    'NEW ZEALAND',
-    'NICARAGUA',
-    'NIGER',
     'NIGERIA',
     'NORTH KOREA',
-    'NORTHERN MARIANA ISLANDS',
     'NORWAY',
     'OMAN',
     'PAKISTAN',
-    'PALAU',
-    'PALESTINE',
-    'PANAMA',
     'PAPUA NEW GUINEA',
     'PARAGUAY',
     'PERU',
@@ -401,18 +402,12 @@ COUNTRY_IGNORE = (
     'REPUBLIC OF MOLDOVA',
     'ROMANIA',
     'RUSSIA',
-    'RWANDA',
-    'RÉUNION',
-    'SAINT BARTHELEMY',
     'SAINT LUCIA',
-    'SAINT PIERRE AND MIQUELON',
-    'SAINT VINCENT AND GRENADINES',
     'SAUDI ARABIA',
     'SENEGAL',
     'SERBIA',
     'SEYCHELLES',
     'SIERRA LEONE',
-    'SINGAPORE',
     'SLOVAKIA',
     'SLOVENIA',
     'SOLOMON ISLANDS',
@@ -422,33 +417,23 @@ COUNTRY_IGNORE = (
     'SRI LANKA',
     'ST KITTS AND NEVIS',
     'SUDAN',
-    'SURINAME',
-    'SVALBARD AND JAN MAYEN',
     'SWEDEN',
     'SWITZERLAND',
     'SYRIA',
-    'SAO TOME AND PRINCIPE',
     'TAIWAN',
-    'TAJIKISTAN',
     'TANZANIA',
     'THAILAND',
-    'TOKELAU',
     'TONGA',
     'TRINIDAD AND TOBAGO',
     'TUNISIA',
     'TURKEY',
     'TURKMENISTAN',
-    'TUVALU',
-    'U.S. VIRGIN ISLANDS',
     'UGANDA',
     'UKRAINE',
     'UNITED ARAB EMIRATES',
     'UNITED KINGDOM',
-    'URUGUAY',
-    'UZBEKISTAN',
     'VENEZUELA',
     'VIETNAM',
-    'WALLIS AND FUTUNA',
     'YEMEN',
     'ZAMBIA'
 )
@@ -478,8 +463,8 @@ REGION_IGNORE = {
 
     'BHUTAN': ('GASA', 'TRASHI YANGSTE'),
 
-    'BURKINA FASO': ('CASCADES REGION', 'CENTRE', 'CENTRE-EST', 'CENTRE-NORD', 'CENTRE-OUEST', 'EST', 'HAUTS-BASSINS',
-                     'NORD', 'PLATEAU-CENTRAL', 'SUD-OUEST'),
+    'BURKINA FASO': ('CASCADES REGION', 'CENTRE', 'CENTRE EST', 'CENTRE NORD', 'CENTRE OUEST', 'EST', 'HAUTS BASSINS',
+                     'NORD', 'PLATEAU CENTRAL', 'SUD OUEST'),
 
     'CAMBODIA': ('TBOUNG KHMUM',),
 
@@ -497,8 +482,14 @@ REGION_IGNORE = {
                 'SOUTH KARELIA', 'KAINUU'),
 
     # since 2016
-    'FRANCE': ('NOUVELLE-AQUITAINE', 'BOURGOGNE-FRANCHE-COMTE', 'HAUTS-DE-FRANCE', 'OCCITANIE', 'GRAND EST',
-               'AUVERGNE-RHONE-ALPES', 'NORMANDY')
+    'FRANCE': ('NOUVELLE AQUITAINE', 'BOURGOGNE FRANCHE COMTE', 'HAUTS DE FRANCE', 'OCCITANIE', 'GRAND EST',
+               'AUVERGNE RHONE ALPES', 'NORMANDY'),
+
+    'NEW ZEALAND': ('TASMAN',),  # Tasman Region was not assigned a code for unknown reasons. (wikipedia)
+
+    'TAJIKISTAN': ('DUSHANBE', 'GORNO BADAKHSHAN', 'REPUBLICAN SUBORDINATION'),
+
+    'PANAMA': ('NGOEBE BUGLE', 'PANAMA OESTE', 'EMBERA WOUNAAN', 'GUNA YALA')
 }
 
 REGION_REPLACE = {
@@ -535,9 +526,6 @@ REGION_REPLACE = {
     'AM': {
         'LORRI': 'LORI'
     },
-    'AN1': {
-        'SANT JULIA DE LORIA': 'SANT JULIÀ DE LORIA'
-    },
     'AO': {
         'CUANDO CUBANGO': 'CUANDO COBANGO',
         'CUANZA SUL': 'KWANZA SUL',
@@ -562,17 +550,16 @@ REGION_REPLACE = {
     'BC': {
         'CENTRAL': 'CENTRAL DISTRICT',
         'FRANCISTOWN': 'CENTRAL',
-        'SOUTH-EAST': 'GABORONE',
+        'SOUTH EAST': 'GABORONE',
         'SOUTHERN': 'NGWAKETSI',
-        'NORTH WEST': 'NORTH-WEST'
     },
     'BD': {
         'HAMILTON': 'HAMILTON CITY',
     },
     'BE': {
         'BRABANT WALLON': 'WALLONIA',
-        'BRUSSELS HOOFDSTEDELIJK GEWEST/REGION DE BRUXELLES-CAPITALE': 'BRUSSELS CAPITAL',
-        'VLAMMS-BRABANT': 'FLANDERS'
+        'BRUSSELS HOOFDSTEDELIJK GEWEST/REGION DE BRUXELLES CAPITALE': 'BRUSSELS CAPITAL',
+        'VLAMMS BRABANT': 'FLANDERS'
     },
     'BF': {
         # 'FREEPORT': 'CITY OF FREEPORT',
@@ -615,7 +602,7 @@ REGION_REPLACE = {
         'KHASKOVO': 'HASKOVO',
         'KURDZHALI': 'KARDZHALI',
         'SOFIYA': 'SOFIA',
-        'SOFIYA-GRAD': 'SOFIA-CAPITAL',
+        'SOFIYA GRAD': 'SOFIA CAPITAL',
         'TURGOVISHTE': 'TARGOVISHTE',
         'VELIKO TURNOVO': 'VELIKO TARNOVO'
     },
@@ -644,8 +631,7 @@ REGION_REPLACE = {
         'OUADDAI': 'OUADAI'
     },
     'CG': {
-        'NORD-KIVU': 'NORD KIVU',
-        'SUD-KIVU': 'SOUTH KIVU',
+        'SUD KIVU': 'SOUTH KIVU',
         'KINSHASA': 'KINSHASA CITY'
     },
     'CH': {
@@ -654,7 +640,7 @@ REGION_REPLACE = {
         'NINGXIA NINGXIA': 'NINGXIA HUI AUTONOMOUS REGION'
     },
     'CI': {
-        'BIO-BIO': 'BIOBIO',
+        'BIO BIO': 'BIOBIO',
         'AISEN DEL GENERAL CARLOS IBANEZ DEL CAMPO': 'AYSEN',
         'REGION METROPOLITANA': 'SANTIAGO METROPOLITAN',
         'LIBERTADOR GENERAL BERNARDO OHIGGINS': 'OHIGGINS REGION',
@@ -662,8 +648,8 @@ REGION_REPLACE = {
     },
     'CM': {
         'OUEST WEST': 'WEST REGION',
-        'NORD-OUEST NORTH-WEST': 'NORTH-WEST REGION',
-        'SUD-OUEST SOUTH-WEST': 'SOUTH-WEST REGION',
+        'NORD OUEST NORTH WEST': 'NORTH WEST REGION',
+        'SUD OUEST SOUTH WEST': 'SOUTH WEST REGION',
         'SUD SOUTH': 'SOUTH'
     },
     'CN': {
@@ -673,7 +659,7 @@ REGION_REPLACE = {
         'DISTRITO CAPITAL': 'BOGOTA D.C.'
     },
     'CT': {
-        'NANA-GREBINGUI': 'NANA-GREBIZI'
+        'NANA GREBINGUI': 'NANA GREBIZI'
     },
     'CU': {
         'ISLA DE LA JUVENTUD': 'MUNICIPIO ESPECIAL ISLA DE LA JUVENTUD',
@@ -719,7 +705,7 @@ REGION_REPLACE = {
         'AL QAHIRAH': 'CAIRO GOVERNORATE',
         'QINA': 'QENA',
         'AL MINUFIYAH': 'MONUFIA',
-        'KAFR ASH SHAYKH': 'KAFR EL-SHEIKH',
+        'KAFR ASH SHAYKH': 'KAFR EL SHEIKH',
         'AL BUHAYRAH': 'BEHEIRA',
         'BANI SUWAYF': 'BENI SUWEIF',
         'DUMYAT': 'DAMIETTA GOVERNORATE',
@@ -738,7 +724,6 @@ REGION_REPLACE = {
         'SAAREMAA': 'SAARE'
     },
     'ER': {
-        'GASH BARKA': 'GASH-BARKA',
         'MAAKEL': 'MAEKEL',
         'DEBUBAWI KEYIH BAHRI': 'SOUTHERN RED SEA',
         'SEMENAWI KEYIH BAHRI': 'NORTHERN RED SEA'
@@ -761,7 +746,7 @@ REGION_REPLACE = {
         'LAPPI': 'LAPLAND'
     },
     'FR': {
-        'CENTRE': 'CENTRE-VAL DE LOIRE',
+        'CENTRE': 'CENTRE VAL DE LOIRE',
         'BRETAGNE': 'BRITTANY',
         'CORSE': 'CORSICA',
         'LIMOUSIN': 'LIMOSINE'
@@ -773,10 +758,10 @@ REGION_REPLACE = {
         'NGOUNIE': 'NGOUNI'
     },
     'HR': {
-        'VUKOVARSKO-SRIJEMSKA': 'VUKOVAR-SIRMIUM',
-        'SPLITSKO-DALMATINSKA': 'SPLIT-DALMATIA',
+        'VUKOVARSKO SRIJEMSKA': 'VUKOVAR SIRMIUM',
+        'SPLITSKO DALMATINSKA': 'SPLIT DALMATIA',
         'ISTARSKA': 'ISTRIA',
-        'BRODSKO-POSAVSKA': 'SLAVONSKI BROD-POSAVINA',
+        'BRODSKO POSAVSKA': 'SLAVONSKI BROD POSAVINA',
         'MEIMURSKA': 'MEGIMURSKA',
         'ZAGREBACKA': 'ZAGREB COUNTY',
         'GRAD ZAGREB': 'ZAGREB'
@@ -792,12 +777,44 @@ REGION_REPLACE = {
         'LAZIO': 'LATIUM',
         'MARCHE': 'MARCHES',
         'PIEMONTE': 'PIEDMONT',
-        'FRIULI-VENEZIA GIULIA': 'FRIULI VENEZIA GIULIA',
         'VALLE DAOSTA': 'AOSTA VALLEY'
+    },
+    'JA': {
+        'FUKUSHIMA': 'FUKUSHIMA KEN',
+        'GUMMA': 'GUNMA'
+    },
+    'LE': {
+        'LIBAN SUD': 'SOUTH GOVERNORATE'
+    },
+    'NL': {
+        'NOORD BRABANT': 'NORTH BRABANT',
+        'NOORD HOLLAND': 'NORTH HOLLAND',
+        'ZUID HOLLAND': 'SOUTH HOLLAND'
+    },
+    'NU': {
+        'ATLANTICO SUR': 'COSTA CARIBE SUR'
+    },
+    'PS': {
+        'AIMELIK': 'AIMELIIK'
+    },
+    'RW': {
+        'OUEST': 'WESTERN',
+        'SUD': 'SOUTHERN',
+        'NORD': 'NORTHERN'
     },
     'SM': {
         'MONTE GIARDINO': 'MONTEGIARDINO',
         'SAN MARINO': 'SAN MARINO CITTA'
+    },
+    'TP': {
+        'SAO TOME': 'SAO TOME ISLAND'
+    },
+    'UZ': {
+        'SURHKONDARYO': 'SURXONDARYO',
+        'FARGHONA': 'FERGANA',
+        'KHORAZM': 'XORAZM',
+        'QORAQALPOGHISTON': 'KARAKALPAKSTAN',
+        'NAWOIY': 'NAVOIY'
     },
     'UV': {
         'MOUHOUN': 'BOUCLE DU MOUHOUN'
@@ -813,14 +830,14 @@ LOCATION_TO_PARENT = {
         'RUMONGE': 'BUJUMBURA',  # since 2015
     },
     'CD': {
-        'AM DJARASS': 'BORKOU-ENNEDI-TIBESTI',
-        'AOZOU': 'BORKOU-ENNEDI-TIBESTI',
-        'BORKOU REGION': 'BORKOU-ENNEDI-TIBESTI',
-        'ENNEDI-EST': 'BORKOU-ENNEDI-TIBESTI',
-        'ENNEDI-OUEST': 'BORKOU-ENNEDI-TIBESTI',
-        'FADA': 'BORKOU-ENNEDI-TIBESTI',
-        'FAYA-LARGEAU': 'BORKOU-ENNEDI-TIBESTI',
-        'TIBESTI REGION': 'BORKOU-ENNEDI-TIBESTI',
+        'AM DJARASS': 'BORKOU ENNEDI TIBESTI',
+        'AOZOU': 'BORKOU ENNEDI TIBESTI',
+        'BORKOU REGION': 'BORKOU ENNEDI TIBESTI',
+        'ENNEDI EST': 'BORKOU ENNEDI TIBESTI',
+        'ENNEDI OUEST': 'BORKOU ENNEDI TIBESTI',
+        'FADA': 'BORKOU ENNEDI TIBESTI',
+        'FAYA LARGEAU': 'BORKOU ENNEDI TIBESTI',
+        'TIBESTI REGION': 'BORKOU ENNEDI TIBESTI',
         'BARH EL GAZEL': 'KANEM',  # since 2008
         'SALAL': 'KANEM'
     },
@@ -829,32 +846,32 @@ LOCATION_TO_PARENT = {
         'BAS UELE': 'ORIENTALE',
         'BUNIA': 'ORIENTALE',
         'HAUT UELE': 'ORIENTALE',
-        'HAUT-LOMANI': 'KATANGA',
+        'HAUT LOMANI': 'KATANGA',
         'INONGO': 'BANDUNDU',
         'ISIRO': 'ORIENTALE',
         'ITURI': 'ORIENTALE',
-        'KASAI': 'KASAI-OCCIDENTAL',
+        'KASAI': 'KASAI OCCIDENTAL',
         'KIKWIT': 'BANDUNDU',
         'KOLWEZI': 'KATANGA',
         'KONGOLO': 'KATANGA',
         'KWILU': 'BANDUNDU',
-        'LODJA': 'KASAI-ORIENTAL',
+        'LODJA': 'KASAI ORIENTAL',
         'LOMAMI': 'KATANGA',
         'LUALABA': 'KATANGA',
         'LUBUMBASHI': 'KATANGA',
-        'LUEBO': 'KASAI-OCCIDENTAL',
+        'LUEBO': 'KASAI OCCIDENTAL',
         'MAI NDOMBE': 'BANDUNDU',
         'MALUKU': 'EQUATEUR',
         'MONGALA': 'EQUATEUR',
-        'MWENE-DITU': 'KATANGA',
-        'PROVINCE DU SUD-UBANGI': 'EQUATEUR',
-        'SANKURU': 'KASAI-ORIENTAL',
-        'SUNGU-MONGA': 'KATANGA',
+        'MWENE DITU': 'KATANGA',
+        'PROVINCE DU SUD UBANGI': 'EQUATEUR',
+        'SANKURU': 'KASAI ORIENTAL',
+        'SUNGU MONGA': 'KATANGA',
         'TANGANIKA': 'KATANGA',
         'TSHOPO': 'ORIENTALE',
         'TSHUAPA': 'EQUATEUR',
         'UPPER KATANGA': 'KATANGA',
-        'YANGA-LIBENGE': 'EQUATEUR',
+        'YANGA LIBENGE': 'EQUATEUR',
         'YANGAMBI': 'ORIENTALE'
     },
     'CV': {
@@ -879,7 +896,7 @@ LOCATION_TO_PARENT = {
     },
     'UV': {
         'BANFORA': 'COMOE',
-        'BOBO-DIOULASSO': 'HOUET',
+        'BOBO DIOULASSO': 'HOUET',
         'DIAPAGA': 'TAPOA',
         'DIÉBOUGOU': 'BOUGOURIBA',
         'KONGOUSSI': 'BAM',
@@ -888,6 +905,14 @@ LOCATION_TO_PARENT = {
         'OUAHIGOUYA': 'YATENGA',
         'TENKODOGO': 'BOULGOU',
         'ZINIARÉ': 'OUBRITENGA'
+    },
+    'UZ': {
+        # city and region have same name but different fips code :(
+        'TASHKENT': 'TOSHKENT',
+        'TOSHKENT SHAHRI': 'TOSHKENT'
+    },
+    'VC': {
+        'SAINT VINCENT AND GRENADINES': 'GRENADINES'
     }
 }
 
@@ -914,6 +939,19 @@ DIVISION_OVERRIDE = {
     'FM': 'STATE OF',                                           # Federated States of Micronesia
     'GA': 'DIVISION',                                           # Gambia
     'SM': 'CASTELLO DI',                                        # San Marino
+    'PM': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),        # Panama
+    'VC': 'PARISH OF',                                          # Saint Vincent and the Grenadines
+    'JM': 'PARISH OF',                                          # Jamaica
+    'LE': 'MOHAFAZAT',                                          # Lebanon
+    'UY': 'DEPARTAMENTO DE',                                    # Uruguay
+    'ML': 'REGION',                                             # Mali
+    'NG': 'REGION',                                             # Niger
+    'NU': 'DEPARTAMENTO DE',                                    # Nicaragua
+    'PS': 'STATE OF',                                           # Palau
+    'NS': 'DISTRIKT',                                           # Suriname
+    'NL': 'PROVINCIE',                                          # Netherlands
+    'TI': 'VILOYATI',                                           # Tajikistan
+    'UZ': re.compile(r'( VILOYATI| PROVINCE)'),                 # Uzbekistan
 }
 
 
@@ -935,6 +973,7 @@ def cleanup(text: str) -> str:
     for part in ('THE ', ' THE', 'CITY OF '):
         text = text.replace(part, '')
     text = text.replace('  ', ' ')
+    text = text.replace('-', ' ')
     return text.strip()
 
 
@@ -1029,12 +1068,10 @@ def correlate(locations, fips):
         if fips_country_code is None and country not in COUNTRY_IGNORE:
             raise Exception('Country {} not found in fips country table'.format(country))
 
-        if fips_country_code and fips_country_code not in fips:
-            for location in locations[country].values():
-                fill(location, fips_country_code, '')
-            continue
-
         if country in COUNTRY_IGNORE:
+            if fips_country_code:
+                for location in locations[country].values():
+                    fill(location, fips_country_code, '00')
             continue
 
         entry = fips[fips_country_code]
