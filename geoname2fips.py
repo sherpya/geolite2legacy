@@ -21,9 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 import re
 import csv
+import string
 import argparse
+import unicodedata
 from typing import Pattern
 
 from collections import defaultdict
@@ -237,8 +240,8 @@ FIPS_COUNTRIES = {
     'ROMANIA': 'RO',
     'RUSSIA': 'RS',
     'RWANDA': 'RW',
-    'RÉUNION': 'RE',
-    'SAINT BARTHÉLEMY': 'TB',
+    'REUNION': 'RE',
+    'SAINT BARTHELEMY': 'TB',
     'SAINT HELENA': 'SH',
     'SAINT LUCIA': 'ST',
     'SAINT MARTIN': 'RN',
@@ -308,39 +311,21 @@ FIPS_COUNTRIES = {
 
 COUNTRY_IGNORE = (
     # without FIPS 10-4 code
-    'ÅLAND',
+    'ALAND',
     'BONAIRE, SINT EUSTATIUS, AND SABA',
-    'CURAÇAO',
-    'SINT MAARTEN',  # maybe NL?
+    'CURACAO',
+    'SINT MAARTEN',
     'U.S. MINOR OUTLYING ISLANDS',
 
-    # empty
+    # empty in fips data
     'AMERICAN SAMOA',
     'COOK ISLANDS',
-
-    # wip
-    'CROATIA',
-    'CUBA',
-    'CYPRUS',
-    'CZECHIA',
     'DEMOCRATIC REPUBLIC OF TIMOR-LESTE',
-    'DENMARK',
-    'DJIBOUTI',
-    'DOMINICAN REPUBLIC',
-    'ECUADOR',
-    'EGYPT',
-    'EL SALVADOR',
-    'EQUATORIAL GUINEA',
-    'ERITREA',
-    'ESTONIA',
-    'ESWATINI',
-    'ETHIOPIA',
-    'FEDERATED STATES OF MICRONESIA',
-    'FINLAND',
     'FRENCH POLYNESIA',
     'FRENCH SOUTHERN TERRITORIES',
-    'GABON',
-    'GAMBIA',
+    'MALTA',
+
+    # wip
     'GEORGIA',
     'GERMANY',
     'GREECE',
@@ -380,7 +365,6 @@ COUNTRY_IGNORE = (
     'MALAYSIA',
     'MALDIVES',
     'MALI',
-    'MALTA',
     'MARSHALL ISLANDS',
     'MAURITANIA',
     'MEXICO',
@@ -419,11 +403,10 @@ COUNTRY_IGNORE = (
     'RUSSIA',
     'RWANDA',
     'RÉUNION',
-    'SAINT BARTHÉLEMY',
+    'SAINT BARTHELEMY',
     'SAINT LUCIA',
     'SAINT PIERRE AND MIQUELON',
     'SAINT VINCENT AND GRENADINES',
-    'SAN MARINO',
     'SAUDI ARABIA',
     'SENEGAL',
     'SERBIA',
@@ -444,7 +427,7 @@ COUNTRY_IGNORE = (
     'SWEDEN',
     'SWITZERLAND',
     'SYRIA',
-    'SÃO TOMÉ AND PRÍNCIPE',
+    'SAO TOME AND PRINCIPE',
     'TAIWAN',
     'TAJIKISTAN',
     'TANZANIA',
@@ -470,97 +453,98 @@ COUNTRY_IGNORE = (
     'ZAMBIA'
 )
 
-REGION_IGNORE = {
+CITY_IGNORE = {
     'AZERBAIJAN': ('AGHSU RAYON',),
 
-    'BAHRAIN': ('AL JASRAH', 'AL MARKH', 'AR RIFA ASH SHAMALI', 'AZ ZALLAQ', 'BANI JAMRAH', 'DAR KULAYB', 'JAWW',
-                'NORTHERN', 'OIL CITY', 'SOUTHERN GOVERNORATE'),
+    'BAHAMAS': ('CENTRAL ABACO DISTRICT', 'EAST GRAND BAHAMA DISTRICT', 'HOPE TOWN DISTRICT', 'NORTH ELEUTHERA'),
 
-    'BOTSWANA': ('CHOBE DISTRICT', 'KASANE', 'JWANENG', 'LOBATSE'),
+    'CZECHIA': ('CZECHIA',),  # city?
 
-    'BAHAMAS': (
-        'ANDROS TOWN', 'BEHRING POINT', 'BIGHT', 'CENTRAL ABACO DISTRICT', 'CENTRAL ANDROS DISTRICT',
-        'EAST GRAND BAHAMA DISTRICT', 'GRAND CAY DISTRICT', 'CROWN HAVEN', 'GRAND CAY', 'HOPE TOWN DISTRICT',
-        'MOORES ISLAND DISTRICT', 'NICHOLLS TOWN', 'NORTH ABACO DISTRICT', 'NORTH ANDROS DISTRICT', 'NORTH ELEUTHERA',
-        'SAN ANDROS', 'SPANISH WELLS', 'SPANISH WELLS DISTRICT', 'SWEETING CAY', 'WEST END',
-        'WEST GRAND BAHAMA DISTRICT'
-    ),
+    'CONGO': ('BOENDE',),
 
-    'BHUTAN': ('GASA', 'TRASHI YANGTSE', 'TRASHI YANGSTE'),  # wtf subst not working?
+    'ESWATINI': ('ESWATINI',),  # city?
+}
 
-    'BOSNIA AND HERZEGOVINA': ('BRCKO', 'BRČKO', 'DURDEVIK'),
+REGION_IGNORE = {
+    'BAHAMAS': ('NORTH ANDROS DISTRICT', 'CENTRAL ANDROS DISTRICT', 'MOORES ISLAND DISTRICT', 'NORTH ABACO DISTRICT',
+                'GRAND CAY DISTRICT', 'SPANISH WELLS DISTRICT', 'EAST GRAND BAHAMA DISTRICT',
+                'WEST GRAND BAHAMA DISTRICT'),
+
+    'BAHRAIN': ('NORTHERN', 'SOUTHERN GOVERNORATE'),
+
+    'BOSNIA AND HERZEGOVINA': ('BRCKO',),
+
+    'BOTSWANA': ('CHOBE DISTRICT', 'JWANENG', 'LOBATSE'),
+
+    'BHUTAN': ('GASA', 'TRASHI YANGSTE'),
 
     'BURKINA FASO': ('CASCADES REGION', 'CENTRE', 'CENTRE-EST', 'CENTRE-NORD', 'CENTRE-OUEST', 'EST', 'HAUTS-BASSINS',
                      'NORD', 'PLATEAU-CENTRAL', 'SUD-OUEST'),
 
-    'CAMBODIA': ('KAMPRAEUS', 'TBOUNG KHMUM'),
+    'CAMBODIA': ('TBOUNG KHMUM',),
 
-    'CHILE': ('BULNES', 'CHILLAN', 'CHILLAN VIEJO', 'COELEMU', 'COIHUECO', 'FRUTILLAR', 'PINTO', 'QUILLON', 'QUIRIHUE',
-              'SAN CARLOS', 'SAN FABIAN DE ALICO', 'SAN IGNACIO', 'ÑUBLE'),
+    # since 2018
+    'CHILE': ('NUBLE',),
 
-    'CONGO': ('BOENDE',)
+    # since 2010
+    'CUBA': ('MAYABEQUE',),
+
+    'EGYPT': ('LUXOR',),
+
+    'FINLAND': ('CENTRAL FINLAND', 'NORTHERN OSTROBOTHNIA', 'SOUTHERN OSTROBOTHNIA', 'CENTRAL OSTROBOTHNIA',
+                'OSTROBOTHNIA', 'FINLAND PROPER', 'TAVASTIA PROPER', 'PIRKANMAA', 'KYMENLAAKSO', 'UUSIMAA',
+                'NORTH KARELIA', 'SATAKUNTA', 'SOUTHERN SAVONIA', 'PAIJANNE TAVASTIA', 'NORTHERN SAVO',
+                'SOUTH KARELIA', 'KAINUU'),
+
+    # since 2016
+    'FRANCE': ('NOUVELLE-AQUITAINE', 'BOURGOGNE-FRANCHE-COMTE', 'HAUTS-DE-FRANCE', 'OCCITANIE', 'GRAND EST',
+               'AUVERGNE-RHONE-ALPES', 'NORMANDY')
 }
 
 REGION_REPLACE = {
-    'AE1': {
-        'ABŪ Z̧ABY': 'ABU DHABI',
-        'ASH SHĀRIQAH': 'ASH SHARIQAH',
-        'DUBAYY': 'DUBAI'
-    },
     'AF': {
         'KABOL': 'KABUL',
         'KANDAHAR KANDAHAR': 'KANDAHAR'
     },
     'AG': {
-        'AIN DEFLA': 'AÏN DEFLA',
-        'AIN TEMOUCHENT': 'AÏN TÉMOUCHENT',
         'ALGER': 'ALGIERS',
-        'BECHAR': 'BÉCHAR',
-        'BEJAIA': 'BÉJAÏA',
-        'BORDJ BOU ARRERIDJ': 'BORDJ BOU ARRÉRIDJ',
-        'SETIF': 'SÉTIF',
-        'SIDI BEL ABBES': 'SIDI BEL ABBÈS',
         'TAMANGHASSET': 'TAMANRASSET',
-        'TEBESSA': 'TÉBESSA',
     },
     'AJ': {
-        'ABŞERON': 'ABSHERON',
+        'ABSERON': 'ABSHERON',
         'BAKI': 'BAKU CITY',
-        'GƏNCƏ': 'GANJA CITY',
-        'NAXÇIVAN': 'NAKHICHEVAN',
+        'GNC': 'GANJA CITY',
+        'NAXCIVAN': 'NAKHICHEVAN',
         'YARDIMLI': 'YARDYMLI',
-        'ŞƏKI': 'SHAKI CITY',
+        'SKI': 'SHAKI CITY',
         'SUMQAYIT': 'SUMQAYIT CITY',
     },
     'AL': {
         'BERAT': 'BERATIT',
-        'DIBËR': 'DIBRES',
-        'DURRËS': 'DURRESIT',
+        'DIBER': 'DIBRES',
+        'DURRES': 'DURRESIT',
         'ELBASAN': 'ELBASANIT',
         'FIER': 'FIERIT',
-        'TIRANË': 'TIRANA',
-        'GJIROKASTËR': 'GJIROKASTRES',
-        'KORÇË': 'KORCES',
-        'LEZHË': 'LEZHES',
-        'SHKODËR': 'SHKODRES',
-        'VLORË': 'VLORES'
+        'TIRANE': 'TIRANA',
+        'GJIROKASTER': 'GJIROKASTRES',
+        'KORCE': 'KORCES',
+        'LEZHE': 'LEZHES',
+        'SHKODER': 'SHKODRES',
+        'VLORE': 'VLORES'
     },
     'AM': {
         'LORRI': 'LORI'
     },
-    'AN': {
+    'AN1': {
         'SANT JULIA DE LORIA': 'SANT JULIÀ DE LORIA'
     },
     'AO': {
-        'BIE': 'BÍE',
         'CUANDO CUBANGO': 'CUANDO COBANGO',
         'CUANZA SUL': 'KWANZA SUL',
-        'HUILA': 'HUÍLA',
         'LUNDA NORTE': 'LUANDA NORTE',
-        'UIGE': 'UÍGE'
     },
     'AR': {
-        'TIERRA DEL FUEGO ANTÁRTIDA E ISLAS DEL ATLÁNTICO SUR': 'TIERRA DEL FUEGO'
+        'TIERRA DEL FUEGO ANTARTIDA E ISLAS DEL ATLANTICO SUR': 'TIERRA DEL FUEGO'
     },
     'AU': {
         'KARNTEN': 'CARINTHIA',
@@ -571,8 +555,8 @@ REGION_REPLACE = {
         'WIEN': 'VIENNA'
     },
     'BA': {
-        'AL MUḨARRAQ': 'MUHARRAQ',
-        'AL ĀŞIMAH': 'MANAMA',
+        'AL MUHARRAQ': 'MUHARRAQ',
+        'AL ASIMAH': 'MANAMA',
         'AR RIFA WA AL MINTAQAH AL JANUBIYAH': 'AR RIFA'
     },
     'BC': {
@@ -587,7 +571,7 @@ REGION_REPLACE = {
     },
     'BE': {
         'BRABANT WALLON': 'WALLONIA',
-        'BRUSSELS HOOFDSTEDELIJK GEWEST/RÉGION DE BRUXELLES-CAPITALE': 'BRUSSELS CAPITAL',
+        'BRUSSELS HOOFDSTEDELIJK GEWEST/REGION DE BRUXELLES-CAPITALE': 'BRUSSELS CAPITAL',
         'VLAMMS-BRABANT': 'FLANDERS'
     },
     'BF': {
@@ -596,9 +580,7 @@ REGION_REPLACE = {
         'SANDY POINT': 'SOUTH ABACO'
     },
     'BG': {
-        'BARISĀL': 'BARISAL',
         'RANGPUR DIVISION': 'RAJSHAHI',
-        'RĀJSHĀHI': 'RAJSHAHI',
         'MYMENSINGH DIVISION': 'DHAKA'
     },
     'BK': {
@@ -613,13 +595,8 @@ REGION_REPLACE = {
         'MINSKAYA VOBLASTS': 'MINSK CITY',
         'VITSYEBSKAYA VOBLASTS': 'VITEBSK'
     },
-    'BP1': {
-        'CHOISEUL': 'HONIARA',
-        'MAKIRA': 'MAKIRA-ULAWA'
-    },
     'BR': {
-        'DISTRITO FEDERAL': 'FEDERAL DISTRICT',
-        'PARAIBA': 'PARAÍBA'
+        'DISTRITO FEDERAL': 'FEDERAL DISTRICT'
     },
     'BT': {
         'CHHUKHA': 'CHUKHA',
@@ -636,42 +613,35 @@ REGION_REPLACE = {
     },
     'BU': {
         'KHASKOVO': 'HASKOVO',
-        'KŬRDZHALI': 'KARDZHALI',
+        'KURDZHALI': 'KARDZHALI',
         'SOFIYA': 'SOFIA',
         'SOFIYA-GRAD': 'SOFIA-CAPITAL',
-        'TŬRGOVISHTE': 'TARGOVISHTE',
-        'VELIKO TŬRNOVO': 'VELIKO TARNOVO'
+        'TURGOVISHTE': 'TARGOVISHTE',
+        'VELIKO TURNOVO': 'VELIKO TARNOVO'
     },
     'CA': {
         'YUKON TERRITORY': 'YUKON'
     },
     'CB': {
-        'BÂNTÉAY MÉAN CHEĂY': 'BANTEAY MEANCHEY',
-        'BĂTDÂMBÂNG': 'BATTAMBANG',
+        'BANTEAY MEAN CHEAY': 'BANTEAY MEANCHEY',
+        'BATDAMBANG': 'BATTAMBANG',
         'KAMPONG SPOE': 'KAMPONG SPEU',
         'KAMPONG THUM': 'KAMPONG THOM',
         'KAOH KONG': 'KOH KONG',
         'KRACHEH': 'KRATIE',
-        'KÂMPÔT': 'KAMPOT',
-        'KÊB': 'KEP',
+        'KEB': 'KEP',
         'MONDOL KIRI': 'MONDOLKIRI',
-        'PAILĬN': 'PAILIN',
-        'PHNUM PÉNH': 'PHNOM PENH',
+        'PHNUM PENH': 'PHNOM PENH',
         'POUTHISAT': 'PURSAT',
-        'PREĂH SEIHÂNŬ': 'PREAH SIHANOUK',
-        'RÔTÂNĂH KIRI': 'RATANAKIRI',
-        'SIĔM RÉAB': 'SIEM REAP',
+        'PREAH SEIHANU': 'PREAH SIHANOUK',
+        'ROTANAH KIRI': 'RATANAKIRI',
+        'SIEM REAB': 'SIEM REAP',
         'STOENG TRENG': 'STUNG TRENG',
         'TAKEV': 'TAKEO',
-        'ŎTDÂR MÉAN CHEĂY': 'OTAR MEANCHEY'
+        'OTDAR MEAN CHEAY': 'OTAR MEANCHEY'
     },
     'CD': {
-        'MAYO-KÉBBI OUEST': 'MAYO-KEBBI OUEST',
-        'OUADDAÏ': 'OUADAÏ'
-    },
-    'CE1': {
-        'AMPARAI': 'AMPARA',
-        'KEGALLA': 'KEGALLE'
+        'OUADDAI': 'OUADAI'
     },
     'CG': {
         'NORD-KIVU': 'NORD KIVU',
@@ -685,10 +655,10 @@ REGION_REPLACE = {
     },
     'CI': {
         'BIO-BIO': 'BIOBIO',
-        'AISEN DEL GENERAL CARLOS IBANEZ DEL CAMPO': 'AYSÉN',
+        'AISEN DEL GENERAL CARLOS IBANEZ DEL CAMPO': 'AYSEN',
         'REGION METROPOLITANA': 'SANTIAGO METROPOLITAN',
         'LIBERTADOR GENERAL BERNARDO OHIGGINS': 'OHIGGINS REGION',
-        'MAGALLANES Y DE LA ANTÁRTICA CHILENA': 'REGION OF MAGALLANES'
+        'MAGALLANES Y DE LA ANTARTICA CHILENA': 'REGION OF MAGALLANES'
     },
     'CM': {
         'OUEST WEST': 'WEST REGION',
@@ -697,30 +667,119 @@ REGION_REPLACE = {
         'SUD SOUTH': 'SOUTH'
     },
     'CN': {
-        'MOHELI': 'MOHÉLI',
         'ANJOUAN': 'NDZUWANI'
     },
     'CO': {
-        'ATLANTICO': 'ATLÁNTICO',
         'DISTRITO CAPITAL': 'BOGOTA D.C.'
     },
     'CT': {
-        'NANA-MAMBERE': 'NANA-MAMBÉRÉ',
-        'OUHAM-PENDE': 'OUHAM-PENDÉ',
-        'NANA-GRÉBINGUI': 'NANA-GRÉBIZI'
+        'NANA-GREBINGUI': 'NANA-GREBIZI'
+    },
+    'CU': {
+        'ISLA DE LA JUVENTUD': 'MUNICIPIO ESPECIAL ISLA DE LA JUVENTUD',
+        'LA HABANA': 'HAVANA'
     },
     'CV': {
         'CAPE VERDE': 'CABO VERDE',
         'RIBEIRA GRANDE': 'RIBEIRA GRANDE DE SANTIAGO',
-        'SANTA CRUZ': 'SÃO LOURENÇO DOS ÓRGÃOS',    # since 2005
-        'SAO VICENTE': 'SÃO VICENTE',
+        'SANTA CRUZ': 'SAO LOURENCO DOS ORGAOS',    # since 2005
+    },
+    'CY': {
+        'FAMAGUSTA': 'AMMOCHOSTOS',
+        'PAPHOS': 'PAFOS',
+        'LARNACA': 'LARNAKA',
+        'KYRENIA': 'KERYNEIA'
+    },
+    'DA': {
+        'SYDDANMARK': 'SOUTH DENMARK',
+        'NORDJYLLAND': 'NORTH DENMARK',
+        'MIDTJYLLEN': 'CENTRAL JUTLAND',
+        'HOVEDSTADEN': 'CAPITAL REGION',
+        'SJLLAND': 'ZEALAND'
+    },
+    'DJ': {
+        'TADJOURA': 'TADJOURAH'
+    },
+    'DR': {
+        'DISTRITO NACIONAL': 'NACIONAL',
+        'BAHORUCO': 'BAORUCO',
+        'SALCEDO': 'HERMANAS MIRABAL'
+    },
+    'EC': {
+        'ORELLANA': 'FRANCISCO DE ORELLANA'
+    },
+    'EG': {
+        'AL JIZAH': 'GIZA',
+        'ASH SHARQIYAH': 'SHARQIA',
+        'AD DAQAHLIYAH': 'DAKAHLIA',
+        'AL QALYUBIYAH': 'QALYUBIA',
+        'AL GHARBIYAH': 'GHARBIA',
+        'AL FAYYUM': 'FAIYUM',
+        'AL ISKANDARIYAH': 'ALEXANDRIA',
+        'AL QAHIRAH': 'CAIRO GOVERNORATE',
+        'QINA': 'QENA',
+        'AL MINUFIYAH': 'MONUFIA',
+        'KAFR ASH SHAYKH': 'KAFR EL-SHEIKH',
+        'AL BUHAYRAH': 'BEHEIRA',
+        'BANI SUWAYF': 'BENI SUWEIF',
+        'DUMYAT': 'DAMIETTA GOVERNORATE',
+        'AL BAHR AL AHMAR': 'RED SEA',
+        'AL ISMAILIYAH': 'ISMAILIA GOVERNORATE',
+        'AL MINYA': 'MINYA',
+        'SHAMAL SINA': 'NORTH SINAI',
+        'JANUB SINA': 'SOUTH SINAI',
+        'BUR SAID': 'PORT SAID',
+        'SUHAJ': 'SOHAG',
+        'AS SUWAYS': 'SUEZ'
+    },
+    'EN': {
+        'TARTUMAA': 'TARTU',
+        'LAANEMAA': 'LAANE',
+        'SAAREMAA': 'SAARE'
+    },
+    'ER': {
+        'GASH BARKA': 'GASH-BARKA',
+        'MAAKEL': 'MAEKEL',
+        'DEBUBAWI KEYIH BAHRI': 'SOUTHERN RED SEA',
+        'SEMENAWI KEYIH BAHRI': 'NORTHERN RED SEA'
+    },
+    'ET': {
+        'AMARA': 'AMHARA',
+        'ADIS ABEBA': 'ADDIS ABABA',
+        'YEDEBUB BIHEROCH BIHERESEBOCH NA HIZBOCH': 'SOUTHERN NATIONS, NATIONALITIES, AND PEOPLES REGION',
+        'GAMBELA HIZBOCH': 'GAMBELA',
+        'HARERI HIZB': 'HARARI',
+        'SUMALE': 'SOMALI'
+    },
+    'EZ': {
+        'JIHOMORAVKY KRAJ': 'SOUTH MORAVIAN',
+        'ZLINSKY KRAJ': 'ZLIN',
+        'STREDOCESKY KRAJ': 'CENTRAL BOHEMIA',
+        'MORAVSKOLEZSKY KRAJ': 'MORAVSKOSLEZSKY'
+    },
+    'FI': {
+        'LAPPI': 'LAPLAND'
     },
     'FR': {
         'CENTRE': 'CENTRE-VAL DE LOIRE',
-        'ILE-DE-FRANCE': 'ÎLE-DE-FRANCE',
         'BRETAGNE': 'BRITTANY',
         'CORSE': 'CORSICA',
         'LIMOUSIN': 'LIMOSINE'
+    },
+    'GA': {
+        'WESTERN': 'WEST COAST'
+    },
+    'GB': {
+        'NGOUNIE': 'NGOUNI'
+    },
+    'HR': {
+        'VUKOVARSKO-SRIJEMSKA': 'VUKOVAR-SIRMIUM',
+        'SPLITSKO-DALMATINSKA': 'SPLIT-DALMATIA',
+        'ISTARSKA': 'ISTRIA',
+        'BRODSKO-POSAVSKA': 'SLAVONSKI BROD-POSAVINA',
+        'MEIMURSKA': 'MEGIMURSKA',
+        'ZAGREBACKA': 'ZAGREB COUNTY',
+        'GRAD ZAGREB': 'ZAGREB'
     },
     'IT': {
         'LOMBARDIA': 'LOMBARDY',
@@ -736,12 +795,16 @@ REGION_REPLACE = {
         'FRIULI-VENEZIA GIULIA': 'FRIULI VENEZIA GIULIA',
         'VALLE DAOSTA': 'AOSTA VALLEY'
     },
+    'SM': {
+        'MONTE GIARDINO': 'MONTEGIARDINO',
+        'SAN MARINO': 'SAN MARINO CITTA'
+    },
     'UV': {
         'MOUHOUN': 'BOUCLE DU MOUHOUN'
     }
 }
 
-REGION_TO_PARENT = {
+LOCATION_TO_PARENT = {
     'BY': {
         'BUJUMBURA MAIRIE PROVINCE': 'BUJUMBURA',
         'BUJUMBURA RURAL PROVINCE': 'BUJUMBURA',
@@ -770,94 +833,52 @@ REGION_TO_PARENT = {
         'INONGO': 'BANDUNDU',
         'ISIRO': 'ORIENTALE',
         'ITURI': 'ORIENTALE',
-        'KASAI': 'KASAÏ-OCCIDENTAL',
+        'KASAI': 'KASAI-OCCIDENTAL',
         'KIKWIT': 'BANDUNDU',
         'KOLWEZI': 'KATANGA',
         'KONGOLO': 'KATANGA',
         'KWILU': 'BANDUNDU',
-        'LODJA': 'KASAÏ-ORIENTAL',
+        'LODJA': 'KASAI-ORIENTAL',
         'LOMAMI': 'KATANGA',
         'LUALABA': 'KATANGA',
         'LUBUMBASHI': 'KATANGA',
-        'LUEBO': 'KASAÏ-OCCIDENTAL',
+        'LUEBO': 'KASAI-OCCIDENTAL',
         'MAI NDOMBE': 'BANDUNDU',
-        'MALUKU': 'ÉQUATEUR',
-        'MONGALA': 'ÉQUATEUR',
+        'MALUKU': 'EQUATEUR',
+        'MONGALA': 'EQUATEUR',
         'MWENE-DITU': 'KATANGA',
-        'PROVINCE DU SUD-UBANGI': 'ÉQUATEUR',
-        'SANKURU': 'KASAÏ-ORIENTAL',
+        'PROVINCE DU SUD-UBANGI': 'EQUATEUR',
+        'SANKURU': 'KASAI-ORIENTAL',
         'SUNGU-MONGA': 'KATANGA',
         'TANGANIKA': 'KATANGA',
         'TSHOPO': 'ORIENTALE',
-        'TSHUAPA': 'ÉQUATEUR',
+        'TSHUAPA': 'EQUATEUR',
         'UPPER KATANGA': 'KATANGA',
-        'YANGA-LIBENGE': 'ÉQUATEUR',
+        'YANGA-LIBENGE': 'EQUATEUR',
         'YANGAMBI': 'ORIENTALE'
     },
     'CV': {
         'PICOS': 'SANTA CATARINA',  # since 2005
-        'COVA FIGUEIRA': 'SÃO FILIPE',
+        'COVA FIGUEIRA': 'SAO FILIPE',
         'PORTO NOVO': 'RIBEIRA GRANDE',
         'RIBEIRA BRAVA': 'SAO NICOLAU',
         'QUEIMADAS': 'SAO NICOLAU',
         'SANTA CATARINA DO FOGO': 'SANTA CATARINA',
-        'SÃO SALVADOR DO MUNDO': 'SANTA CATARINA',  # since 2005
+        'SAO SALVADOR DO MUNDO': 'SANTA CATARINA',  # since 2005
         'TARRAFAL DE SAO NICOLAU': 'SAO NICOLAU',
         'TARRAFAL DE SÃO NICOLAU': 'SAO NICOLAU',
         'VILA DA RIBEIRA BRAVA': 'SAO NICOLAU'
     },
-    'FR': {
-        # Nouvelle-Aquitaine
-        'AAST': 'AQUITAINE',
-        'ABIDOS': 'AQUITAINE',
-        'ABITAIN': 'AQUITAINE',
-        'ABZAC': 'AQUITAINE',
-        'ADRIERS': 'POITOU-CHARENTES',
-        'AFFIEUX': 'LIMOSINE',
-        # Bourgogne-Franche-Comté
-        'ABBANS-DESSUS': 'FRANCHE-COMTE',
-        'ABBEVILLERS': 'FRANCHE-COMTE',
-        'ABERGEMENT-LA-RONCE': 'FRANCHE-COMTE',
-        'ACCOLANS': 'FRANCHE-COMTE',
-        'ACCOLAY': 'BOURGOGNE',
-        # Occitanie
-        'ABEILHAN': 'LANGUEDOC-ROUSSILLON',
-        'ADAST': 'MIDI-PYRENEES',
-        'ADE': 'MIDI-PYRENEES',
-        'ADISSAN': 'LANGUEDOC-ROUSSILLON',
-        # Hauts-de-France
-        'ABBECOURT': 'PICARDIE',
-        'ABBEVILLE': 'PICARDIE',
-        'ABBEVILLE-SAINT-LUCIEN': 'PICARDIE',
-        'ABLAIN-SAINT-NAZAIRE': 'NORD-PAS-DE-CALAIS',
-        'ABSCON': 'NORD-PAS-DE-CALAIS',
-        'ACHERY': 'PICARDIE',
-        'ACHEVILLE': 'NORD-PAS-DE-CALAIS',
-        'ACHICOURT': 'NORD-PAS-DE-CALAIS',
-        'ACHIET-LE-GRAND': 'NORD-PAS-DE-CALAIS',
-        'ACHY': 'PICARDIE',
-        'ACY': 'PICARDIE',
-        'ADINFER': 'NORD-PAS-DE-CALAIS',
-        'AFFRINGUES': 'NORD-PAS-DE-CALAIS',
-        # Grand Est
-        'ABLANCOURT': 'CHAMPAGNE-ARDENNE',
-        'ABRESCHVILLER': 'LORRAINE',
-        'ACHEN': 'LORRAINE',
-        'ACHENHEIM': 'ALSACE',
-        'ADAINCOURT': 'LORRAINE',
-        'ADAMSWILLER': 'ALSACE',
-        # Auvergne-Rhône-Alpes
-        'ABOEN': 'RHONE-ALPES',
-        'ABONDANCE': 'RHONE-ALPES',
-        'ABREST': 'AUVERGNE',
-        'AFFOUX': 'RHONE-ALPES',
-        # NORMANDY
-        'ACON': 'HAUTE-NORMANDIE',
-        'ACQUEVILLE': 'BASSE-NORMANDIE',
-        'ACQUIGNY': 'HAUTE-NORMANDIE',
+    'EC': {
+        # since 2007
+        'PROVINCIA DE SANTA ELENA': 'GUAYAS',
+        'SANTA ELENA': 'GUAYAS',
+        'SALINAS': 'GUAYAS',
+        'PROVINCIA DE SANTO DOMINGO DE LOS TSACHILAS': 'PICHINCHA',
+        'SANTO DOMINGO DE LOS COLORADOS': 'PICHINCHA'
     },
     'UV': {
-        'BANFORA': 'COMOÉ',
+        'BANFORA': 'COMOE',
         'BOBO-DIOULASSO': 'HOUET',
         'DIAPAGA': 'TAPOA',
         'DIÉBOUGOU': 'BOUGOURIBA',
@@ -881,7 +902,18 @@ DIVISION_OVERRIDE = {
     'CI': re.compile(r'(REGION DE LA |REGION DE |REGION DEL | REGION)'),
     'CM': 'REGION',                                             # Cameroon
     'CO': re.compile(r'(DEPARTAMENTO DE.*?\s|\sDEPARTMENT)'),   # Colombia
-    'CS': 'PROVINCIA DE'
+    'CS': 'PROVINCIA DE',                                       # Costa Rica
+    'HR': 'ZUPANIJA',                                           # Croatia
+    'CU': 'PROVINCIA DE',                                       # Cuba
+    'EZ': 'KRAJ',                                               # Czechia
+    'DJ': 'REGION',                                             # Djibouti
+    'DR': re.compile(r'(PROVINCIA DE |PROVINCIA )'),            # Dominican Republic
+    'EC': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),        # Ecuador
+    'ES': 'DEPARTAMENTO DE',                                    # El Salvador
+    'ET': 'REGION',                                             # Ethiopia
+    'FM': 'STATE OF',                                           # Federated States of Micronesia
+    'GA': 'DIVISION',                                           # Gambia
+    'SM': 'CASTELLO DI',                                        # San Marino
 }
 
 
@@ -889,9 +921,13 @@ re_par1 = re.compile(r'\([^()]*\)')
 re_par2 = re.compile(r'\[[^()]*\]')
 
 
+def only_printable(text):
+    return ''.join(x for x in unicodedata.normalize('NFKD', text) if x in string.printable)
+
+
 # FIXME: better
 def cleanup(text: str) -> str:
-    text = text.upper()
+    text = only_printable(text.upper())
     text = re_par1.sub('', text)
     text = re_par2.sub('', text)
     for quote in "ʼ’‘ʻ`'":
@@ -917,7 +953,6 @@ def search(rn, rd, c, e):
             rn = rn.replace(rd, '').strip()
             names.add(rn)
 
-    import os
     if c == os.environ.get('C'):
         print('\nSearching for {}:\n > {}'.format(', '.join(sorted(names)), ', '.join(sorted(e.keys()))))
 
@@ -980,6 +1015,14 @@ def parse_fips():
         return fips
 
 
+def ignore_city(country, city):
+    return country in CITY_IGNORE and city in CITY_IGNORE[country]
+
+
+def ignore_region(country, region):
+    return country in REGION_IGNORE and region in REGION_IGNORE[country]
+
+
 def correlate(locations, fips):
     for country in sorted(locations.keys()):
         fips_country_code = FIPS_COUNTRIES.get(country)
@@ -996,34 +1039,37 @@ def correlate(locations, fips):
 
         entry = fips[fips_country_code]
 
-        for region_name in sorted(locations[country].keys()):
-            ignore_region = country in REGION_IGNORE and region_name in REGION_IGNORE[country]
+        for location_name in sorted(locations[country].keys()):
+            location_name = LOCATION_TO_PARENT.get(fips_country_code, {}).get(location_name, location_name)
+            region_name = None
             region_division = region_divisions.get(fips_country_code)
+            location = locations[country][location_name]
 
-            location = locations[country][region_name]
-
-            region_name = REGION_TO_PARENT.get(fips_country_code, {}).get(region_name, region_name)
-
-            region_by_city = ''
-            found = search(region_name, region_division, fips_country_code, entry)
+            found = search(location_name, region_division, fips_country_code, entry)
             if found is None:
-                city = search(region_name, region_division, fips_country_code, cities[country])
+                city = search(location_name, region_division, fips_country_code, cities[country])
                 if city is not None:
-                    region_by_city = cities[country][city]
-                    region_by_city = REGION_REPLACE.get(fips_country_code, {}).get(region_by_city, region_by_city)
-                    # ignore_region = country in REGION_IGNORE and region_by_city in REGION_IGNORE[country]
-                    found = search(region_by_city, region_division, fips_country_code, entry)
+                    region_name = cities[country][city]
+                    region_name = REGION_REPLACE.get(fips_country_code, {}).get(region_name, region_name)
+                    found = search(region_name, region_division, fips_country_code, entry)
 
             if found is None:
-                if ignore_region:
+                if ignore_city(country, location_name) or ignore_region(country, location_name) or \
+                        (region_name and ignore_region(country, region_name)):
+                    if fips_country_code == os.environ.get('I'):
+                        print('Ignoring: {} ({}) - {} ({})'.format(location_name, region_name, country, fips_country_code))
                     fill(location, fips_country_code, '00')
                     continue
-                continue
-                raise Exception('Region {} ({}) not found in {} ({})'.format(region_name, region_by_city, country,
-                                                                             fips_country_code))
 
-            if ignore_region:
-                raise Exception('Ignored region found: {} in {}'.format(region_name, country))
+                if 'N' in os.environ:
+                    print('Location {} ({}) not found in {} ({})'.format(location_name, region_name, country,
+                                                                         fips_country_code))
+                    continue
+                raise Exception('Location {} ({}) not found in {} ({})'.format(location_name, region_name, country,
+                                                                               fips_country_code))
+
+            if region_name and ignore_region(country, region_name):
+                raise Exception('Ignored region found: {} in {}'.format(location_name, country))
 
             fill(location, fips_country_code, entry[found][2])
 
