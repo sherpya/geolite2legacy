@@ -979,6 +979,9 @@ def search(rn, rd, c, e, verbose=False):
 
     if isinstance(rd, Pattern):
         names.add(rd.sub('', rn))
+    elif isinstance(rd, tuple):
+        for r in rd:
+            names.add('{}{}'.format(rn, r))
     elif isinstance(rd, str):
         names.add('{} OF {}'.format(rd, rn))
         names.add('{} {}'.format(rn, rd))
