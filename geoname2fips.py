@@ -286,7 +286,7 @@ FIPS_COUNTRIES = {
     'TURKMENISTAN': 'TX',
     'TURKS AND CAICOS ISLANDS': 'TK',
     'TUVALU': 'TV',
-    'U.S. VIRGIN ISLANDS': 'VQ',
+    'US VIRGIN ISLANDS': 'VQ',
     'UGANDA': 'UG',
     'UKRAINE': 'UP',
     'UNDESIGNATED SOVEREIGNTY': 'UU',
@@ -314,7 +314,7 @@ COUNTRY_IGNORE = (
     'BONAIRE, SINT EUSTATIUS, AND SABA',
     'CURACAO',
     'SINT MAARTEN',
-    'U.S. MINOR OUTLYING ISLANDS',
+    'US MINOR OUTLYING ISLANDS',
     'PALESTINE',  # WE? no entries on wikipedia
 
     # empty in fips csv
@@ -334,7 +334,7 @@ COUNTRY_IGNORE = (
     'SVALBARD AND JAN MAYEN',
     'TOKELAU',
     'TUVALU',
-    'U.S. VIRGIN ISLANDS',
+    'US VIRGIN ISLANDS',
     'WALLIS AND FUTUNA',
 
     # missing in fips csv
@@ -343,40 +343,20 @@ COUNTRY_IGNORE = (
     'SOUTH SUDAN',
 
     # wip
-    'GEORGIA',
-    'GERMANY',
-    'GREECE',
-    'GREENLAND',
-    'GRENADA',
-    'GUATEMALA',
-    'GUINEA',
-    'GUINEA BISSAU',
-    'HAITI',
-    'HASHEMITE KINGDOM OF JORDAN',
-    'HONDURAS',
-    'HUNGARY',
-    'ICELAND',
     'INDIA',
     'INDONESIA',
     'IRAN',
-    'IRAQ',
-    'IRELAND',
     'ISRAEL',
     'IVORY COAST',
     'KAZAKHSTAN',
     'KENYA',
-    'KUWAIT',
-    'KYRGYZSTAN',
     'LAOS',
     'LATVIA',
     'LIBERIA',
     'LIBYA',
     'LUXEMBOURG',
-    'MACAO',
     'MACEDONIA',
     'MALAWI',
-    'MALAYSIA',
-    'MALDIVES',
     'MAURITANIA',
     'MEXICO',
     'MONGOLIA',
@@ -386,56 +366,36 @@ COUNTRY_IGNORE = (
     'NEPAL',
     'NIGERIA',
     'NORTH KOREA',
-    'NORWAY',
-    'OMAN',
     'PAKISTAN',
     'PAPUA NEW GUINEA',
     'PARAGUAY',
-    'PERU',
     'PHILIPPINES',
     'POLAND',
-    'PORTUGAL',
     'QATAR',
     'REPUBLIC OF CONGO',
     'REPUBLIC OF KOREA',
     'REPUBLIC OF LITHUANIA',
     'REPUBLIC OF MOLDOVA',
-    'ROMANIA',
     'RUSSIA',
     'SAINT LUCIA',
     'SAUDI ARABIA',
     'SENEGAL',
     'SERBIA',
-    'SEYCHELLES',
-    'SIERRA LEONE',
     'SLOVAKIA',
     'SLOVENIA',
-    'SOLOMON ISLANDS',
     'SOMALIA',
     'SOUTH AFRICA',
-    'SPAIN',
     'SRI LANKA',
-    'ST KITTS AND NEVIS',
     'SUDAN',
-    'SWEDEN',
     'SWITZERLAND',
-    'SYRIA',
-    'TAIWAN',
     'TANZANIA',
     'THAILAND',
-    'TONGA',
-    'TRINIDAD AND TOBAGO',
     'TUNISIA',
-    'TURKEY',
     'TURKMENISTAN',
     'UGANDA',
     'UKRAINE',
-    'UNITED ARAB EMIRATES',
     'UNITED KINGDOM',
-    'VENEZUELA',
-    'VIETNAM',
-    'YEMEN',
-    'ZAMBIA'
+    'VIETNAM'
 )
 
 CITY_IGNORE = {
@@ -485,14 +445,61 @@ REGION_IGNORE = {
     'FRANCE': ('NOUVELLE AQUITAINE', 'BOURGOGNE FRANCHE COMTE', 'HAUTS DE FRANCE', 'OCCITANIE', 'GRAND EST',
                'AUVERGNE RHONE ALPES', 'NORMANDY'),
 
+    'GEORGIA': ('SAMTSKHE JAVAKHETI', 'GURIA', 'IMERETI', 'KAKHETI', 'KVEMO KARTLI',
+                'RACHA LECHKHUMI AND KVEMO SVANETI', 'SAMEGRELO AND ZEMO SVANETI', 'SHIDA KARTLI'),
+
+    'GREECE': ('NORTH AEGEAN', 'SOUTH AEGEAN', 'CENTRAL GREECE', 'WEST GREECE', 'CENTRAL MACEDONIA', 'WEST MACEDONIA',
+               'CRETE', 'EPIRUS', 'IONIAN ISLANDS', 'PELOPONNESE', 'MOUNT ATHOS'),
+
+    # since 2018
+    'GREENLAND': ('QEQERTALIK', 'AVANNAATA'),
+
+    'GRENADA': ('CARRIACOU AND PETITE MARTINIQUE',),
+
+    'IRELAND': ('LEINSTER', 'MUNSTER', 'CONNAUGHT', 'ULSTER'),
+
+    'MALDIVES': ('NORTHERN ARI ATOLL',),
+
     'NEW ZEALAND': ('TASMAN',),  # Tasman Region was not assigned a code for unknown reasons. (wikipedia)
+
+    'NORWAY': ('TRONDELAG',),
+
+    'OMAN': ('AL BATINAH NORTH GOVERNORATE', 'AL BATINAH SOUTH', 'NORTHEASTERN GOVERNORATE',
+             'SOUTHEASTERN GOVERNORATE'),
+
+    'TAIWAN': ('YUNLIN', 'NANTOU', 'CHIAYI', 'CHIAYI COUNTY', 'PENGHU COUNTY', 'HSINCHU COUNTY', 'CHANGHUA',
+               'TAICHUNG CITY', 'TAINAN', 'TAOYUAN', 'KEELUNG', 'YILAN', 'MIAOLI', 'KINMEN COUNTY', 'PINGTUNG',
+               'LIENCHIANG', 'HUALIEN', 'TAITUNG', 'HSINCHU', 'NEW TAIPEI'),
 
     'TAJIKISTAN': ('DUSHANBE', 'GORNO BADAKHSHAN', 'REPUBLICAN SUBORDINATION'),
 
-    'PANAMA': ('NGOEBE BUGLE', 'PANAMA OESTE', 'EMBERA WOUNAAN', 'GUNA YALA')
+    'TRINIDAD AND TOBAGO': ('SAN JUAN/LAVENTILLE', 'TUNAPUNA/PIARCO', 'PENAL/DEBE', 'POINT FORTIN',
+                            'COUVA TABAQUITE TALPARO', 'DIEGO MARTIN', 'CHAGUANAS', 'SIPARIA', 'PRINCES TOWN',
+                            'SANGRE GRANDE'),
+
+    'PANAMA': ('NGOEBE BUGLE', 'PANAMA OESTE', 'EMBERA WOUNAAN', 'GUNA YALA'),
+
+    # since 2017
+    'SIERRA LEONE': ('NORTH WEST',),
+
+    'SOLOMON ISLANDS': ('HONIARA',),
+
+    'SPAIN': ('CEUTA', 'MELILLA'),
+
+    'TONGA': ('EUA', 'NIUAS'),
+
+    # since 2004
+    'YEMEN': ('RAYMAH', 'SOQATRA'),
+
+    # since 2011
+    'ZAMBIA': ('MUCHINGA',)
 }
 
 REGION_REPLACE = {
+    'AE': {
+        'ABU ZABY': 'ABU DHABI',
+        'DUBAYY': 'DUBAI'
+    },
     'AF': {
         'KABOL': 'KABUL',
         'KANDAHAR KANDAHAR': 'KANDAHAR'
@@ -504,10 +511,10 @@ REGION_REPLACE = {
     'AJ': {
         'ABSERON': 'ABSHERON',
         'BAKI': 'BAKU CITY',
-        'GNC': 'GANJA CITY',
+        'GANCA': 'GANJA CITY',
         'NAXCIVAN': 'NAKHICHEVAN',
         'YARDIMLI': 'YARDYMLI',
-        'SKI': 'SHAKI CITY',
+        'SAKI': 'SHAKI CITY',
         'SUMQAYIT': 'SUMQAYIT CITY',
     },
     'AL': {
@@ -581,6 +588,9 @@ REGION_REPLACE = {
         'MAHILYOWSKAYA VOBLASTS': 'MOGILEV',
         'MINSKAYA VOBLASTS': 'MINSK CITY',
         'VITSYEBSKAYA VOBLASTS': 'VITEBSK'
+    },
+    'BP': {
+        'MAKIRA': 'MAKIRA ULAWA'
     },
     'BR': {
         'DISTRITO FEDERAL': 'FEDERAL DISTRICT'
@@ -656,7 +666,7 @@ REGION_REPLACE = {
         'ANJOUAN': 'NDZUWANI'
     },
     'CO': {
-        'DISTRITO CAPITAL': 'BOGOTA D.C.'
+        'DISTRITO CAPITAL': 'BOGOTA DC'
     },
     'CT': {
         'NANA GREBINGUI': 'NANA GREBIZI'
@@ -681,7 +691,7 @@ REGION_REPLACE = {
         'NORDJYLLAND': 'NORTH DENMARK',
         'MIDTJYLLEN': 'CENTRAL JUTLAND',
         'HOVEDSTADEN': 'CAPITAL REGION',
-        'SJLLAND': 'ZEALAND'
+        'SJAELLAND': 'ZEALAND'
     },
     'DJ': {
         'TADJOURA': 'TADJOURAH'
@@ -757,14 +767,52 @@ REGION_REPLACE = {
     'GB': {
         'NGOUNIE': 'NGOUNI'
     },
+    'GG': {
+        'TBILISI': 'KALAKI TBILISI',
+        'MTSKHETIS RAIONI': 'MTSKHETA MTIANETI',  # wtf
+    },
+    'GM': {
+        'BAYERN': 'BAVARIA',
+        'NORDRHEIN WESTFALEN': 'NORTH RHINE WESTPHALIA',
+        'HESSEN': 'HESSE',
+        'NIEDERSACHSEN': 'LOWER SAXONY',
+        'THURINGEN': 'THURINGIA',
+        'SACHSEN ANHALT': 'SAXONY ANHALT',
+        'SACHSEN': 'SAXONY',
+        'BERLIN': 'LAND BERLIN'
+    },
+    'GR': {
+        'ATTIKI': 'ATTICA',
+        'LARISA': 'THESSALY',
+        'EVROS': 'EAST MACEDONIA AND THRACE'
+    },
+    'GT': {
+        'SUCHITEPEQUEZ': 'SUCHITEPEQUE'
+    },
+    'HA': {
+        'GRAND ANSE': 'GRANDANS'
+    },
+    'HO': {
+        'ISLAS DE LA BAHIA': 'BAY ISLANDS'
+    },
     'HR': {
         'VUKOVARSKO SRIJEMSKA': 'VUKOVAR SIRMIUM',
         'SPLITSKO DALMATINSKA': 'SPLIT DALMATIA',
         'ISTARSKA': 'ISTRIA',
         'BRODSKO POSAVSKA': 'SLAVONSKI BROD POSAVINA',
-        'MEIMURSKA': 'MEGIMURSKA',
+        'MEDIMURSKA': 'MEGIMURSKA',
         'ZAGREBACKA': 'ZAGREB COUNTY',
         'GRAD ZAGREB': 'ZAGREB'
+    },
+    'IC': {
+        'AUSTURLAND': 'EAST',
+        'HOFUDBORGARSVAEDI': 'CAPITAL',
+        'NORDURLAND EYSTRA': 'NORTHEAST',
+        'NORDURLAND VESTRA': 'NORTHWEST',
+        'SUDURLAND': 'SOUTH',
+        'SUDURNES': 'SOUTHERN PENINSULA',
+        'VESTFIRDIR': 'WESTFJORDS',
+        'VESTURLAND': 'WEST'
     },
     'IT': {
         'LOMBARDIA': 'LOMBARDY',
@@ -779,12 +827,50 @@ REGION_REPLACE = {
         'PIEMONTE': 'PIEDMONT',
         'VALLE DAOSTA': 'AOSTA VALLEY'
     },
+    'IZ': {
+        'AL ANBAR': 'ANBAR',
+        'AL BASRAH': 'BASRA',
+        'DAHUK': 'DIHOK',
+        'AT TAMIM': 'KIRKUK',
+        'NINAWA': 'NINEVEH'
+    },
     'JA': {
         'FUKUSHIMA': 'FUKUSHIMA KEN',
         'GUMMA': 'GUNMA'
     },
+    'JO': {
+        'AJLUN': 'AJLOUN',
+        'AL AQABAH': 'AQABA',
+        'AL KARAK': 'KARAK',
+        'AL BALQA': 'BALQA',
+        'AL MAFRAQ': 'MAFRAQ',
+        'AT TAFILAH': 'TAFIELAH',
+        'AZ ZARQA': 'ZARQA',
+        'JARASH': 'JERASH',
+        'JORDAN': 'HASHEMITE KINGDOM OF JORDAN',
+    },
+    'KG': {
+        'YSYK KOL': 'ISSYK KUL',
+        'CHUY': 'CHUYSKAYA',
+        'BISHKEK': 'GOROD BISHKEK',
+        'OSH': 'OSH OBLASTY'
+    },
     'LE': {
         'LIBAN SUD': 'SOUTH GOVERNORATE'
+    },
+    'MC': {
+        'MACAU': 'MACAO'
+    },
+    'MU': {
+        'AL BURAYMI': 'AL BURAIMI',
+        'MASQAT': 'MUSCAT',
+        'ZUFAR': 'DHOFAR'
+    },
+    'MV': {
+        'GNAVIYANI': 'GNYAVIYANI'
+    },
+    'MY': {
+        'PULAU PINANG': 'PENANG'
     },
     'NL': {
         'NOORD BRABANT': 'NORTH BRABANT',
@@ -794,20 +880,68 @@ REGION_REPLACE = {
     'NU': {
         'ATLANTICO SUR': 'COSTA CARIBE SUR'
     },
+    'PO': {
+        'LISBOA': 'LISBON'
+    },
     'PS': {
         'AIMELIK': 'AIMELIIK'
+    },
+    'PU': {
+        'BOLAMA': 'BOLAMA AND BIJAGOS'
     },
     'RW': {
         'OUEST': 'WESTERN',
         'SUD': 'SOUTHERN',
         'NORD': 'NORTHERN'
     },
+    'SC': {
+        'SAINT JOHN CAPISTERRE': 'SAINT JOHN CAPESTERRE',
+        'SAINT PAUL CAPISTERRE': 'SAINT PAUL CAPESTERRE',
+        'SAINT THOMAS MIDDLE ISLAND': 'MIDDLE ISLAND'
+    },
+    'SE': {
+        'GRAND ANSE': 'GRAND ANSE PRASLIN'
+    },
+    'SL': {
+
+    },
     'SM': {
         'MONTE GIARDINO': 'MONTEGIARDINO',
         'SAN MARINO': 'SAN MARINO CITTA'
     },
+    'SP': {
+        'PAIS VASCO': 'BASQUE COUNTRY',
+        'NAVARRA': 'NAVARRE',
+        'ANDALUCIA': 'ANDALUSIA',
+        'CASTILLA LA MANCHA': 'CASTILLE LA MANCHA',
+        'CATALUNA': 'CATALONIA',
+        'CASTILLA Y LEON': 'CASTILLE AND LEON',
+        'CANARIAS': 'CANARY ISLANDS',
+        'VALENCIANA': 'VALENCIA',
+        'ISLAS BALEARES': 'BALEARIC ISLANDS'
+    },
+    'SY': {
+        'HALAB': 'ALEPPO',
+        'DIMASHQ': 'DAMASCUS',
+        'HAMAH': 'HAMA',
+        'AL LADHIQIYAH': 'LATAKIA'
+    },
+    'TD': {
+        'TRINIDAD': 'TRINIDAD AND TOBAGO'  # not sure
+    },
     'TP': {
         'SAO TOME': 'SAO TOME ISLAND'
+    },
+    'TU': {
+        'DUZCE': 'DUEZCE',
+        'BARTIN ILI': 'BARTIN',
+        'ICEL': 'MERSIN',
+        'GUMUSHANE': 'GUEMUESHANE',
+        'KARABUK': 'KARABUEK'
+    },
+    'TW': {
+        'KAO HSIUNG': 'KAOHSIUNG',
+        'TAI PEI': 'TAIPEI CITY'
     },
     'UZ': {
         'SURHKONDARYO': 'SURXONDARYO',
@@ -818,6 +952,11 @@ REGION_REPLACE = {
     },
     'UV': {
         'MOUHOUN': 'BOUCLE DU MOUHOUN'
+    },
+    'YM': {
+        'ADAN': 'ADEN',
+        'AMRAN': 'OMRAN',
+        'SANA': 'SANAA'
     }
 }
 
@@ -917,41 +1056,64 @@ LOCATION_TO_PARENT = {
 }
 
 DIVISION_OVERRIDE = {
-    'AL': 'QARKU I',                                            # Albania
-    'AC': 'PARISH OF',                                          # Antigua And Barbuda
-    'AR': 'F.D.',                                               # Argentina
-    'BN': 'DEPARTMENT',                                         # Benin
-    'BT': 'DZONGKHAG',                                          # Bhutan
-    'BL': 'DEPARTAMENTO DE',                                    # Bolivia
-    'BU': 'OBLAST',                                             # Bulgaria
+    'AC': 'PARISH OF',
+    'AL': 'QARKU I',
+    'AR': 'FD',
+    'BL': 'DEPARTAMENTO DE',
+    'BN': 'DEPARTMENT',
+    'BT': 'DZONGKHAG',
+    'BU': 'OBLAST',
     'CI': re.compile(r'(REGION DE LA |REGION DE |REGION DEL | REGION)'),
-    'CM': 'REGION',                                             # Cameroon
-    'CO': re.compile(r'(DEPARTAMENTO DE.*?\s|\sDEPARTMENT)'),   # Colombia
-    'CS': 'PROVINCIA DE',                                       # Costa Rica
-    'HR': 'ZUPANIJA',                                           # Croatia
-    'CU': 'PROVINCIA DE',                                       # Cuba
-    'EZ': 'KRAJ',                                               # Czechia
-    'DJ': 'REGION',                                             # Djibouti
-    'DR': re.compile(r'(PROVINCIA DE |PROVINCIA )'),            # Dominican Republic
-    'EC': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),        # Ecuador
-    'ES': 'DEPARTAMENTO DE',                                    # El Salvador
-    'ET': 'REGION',                                             # Ethiopia
-    'FM': 'STATE OF',                                           # Federated States of Micronesia
-    'GA': 'DIVISION',                                           # Gambia
-    'SM': 'CASTELLO DI',                                        # San Marino
-    'PM': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),        # Panama
-    'VC': 'PARISH OF',                                          # Saint Vincent and the Grenadines
-    'JM': 'PARISH OF',                                          # Jamaica
-    'LE': 'MOHAFAZAT',                                          # Lebanon
-    'UY': 'DEPARTAMENTO DE',                                    # Uruguay
-    'ML': 'REGION',                                             # Mali
-    'NG': 'REGION',                                             # Niger
-    'NU': 'DEPARTAMENTO DE',                                    # Nicaragua
-    'PS': 'STATE OF',                                           # Palau
-    'NS': 'DISTRIKT',                                           # Suriname
-    'NL': 'PROVINCIE',                                          # Netherlands
-    'TI': 'VILOYATI',                                           # Tajikistan
-    'UZ': re.compile(r'( VILOYATI| PROVINCE)'),                 # Uzbekistan
+    'CM': 'REGION',
+    'CO': re.compile(r'(DEPARTAMENTO DE.*?\s|\sDEPARTMENT)'),
+    'CS': 'PROVINCIA DE',
+    'CU': 'PROVINCIA DE',
+    'DJ': 'REGION',
+    'DR': re.compile(r'(PROVINCIA DE |PROVINCIA )'),
+    'EC': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),
+    'ES': 'DEPARTAMENTO DE',
+    'ET': 'REGION',
+    'EZ': 'KRAJ',
+    'FM': 'STATE OF',
+    'GA': 'DIVISION',
+    'GG': 'RAIONI',
+    'GM': 'REGION',
+    'GT': re.compile(r'(DEPARTAMENTO DE.*?\s|\sDEPARTMENT)'),
+    'GV': 'REGION',
+    'HA': re.compile(r'(DEPARTEMENT DE L|DEPARTEMENT DE )'),
+    'HO': 'DEPARTAMENTO DE',
+    'HR': 'ZUPANIJA',
+    'HU': 'MEGYE',
+    'IZ': 'MUHAFAZAT',
+    'JM': 'PARISH OF',
+    'KG': 'OBLAST',
+    'KU': 'MUHAFAZAT',
+    'LE': 'MOHAFAZAT',
+    'ML': 'REGION',
+    'MU': 'MUHAFAZAT',
+    'MV': re.compile(r'( ATHOLHU| ATOLL)'),
+    'NG': 'REGION',
+    'NL': 'PROVINCIE',
+    'NO': 'COUNTY',
+    'NS': 'DISTRIKT',
+    'NU': 'DEPARTAMENTO DE',
+    'PE': re.compile(r'(REGION DE | REGION|DEPARTAMENTO DE )'),
+    'PM': re.compile(r'(PROVINCIA DE |PROVINCIA DEL )'),
+    'PS': 'STATE OF',
+    'RO': 'JUDETUL',
+    'SM': 'CASTELLO DI',
+    'SP': 'PRINCIPALITY OF',
+    'SW': (' LAN', 'S LAN'),
+    'SY': 'GOVERNORATE',
+    'TD': re.compile(r'(BOROUGH OF )'),
+    'TI': 'VILOYATI',
+    'UP': 'OBLAST',
+    'UV': 'PROVINCE DE LA ',
+    'UY': 'DEPARTAMENTO DE',
+    'UZ': re.compile(r'( VILOYATI| PROVINCE)'),
+    'VC': 'PARISH OF',
+    'VE': 'ESTADO',
+    'YM': 'MUHAFAZAT'
 }
 
 
@@ -961,8 +1123,6 @@ re_par2 = re.compile(r'\[[^()]*\]')
 
 # FIXME: better
 def cleanup(text: str) -> str:
-    for quote in "ʼ’‘ʻ`'":
-        text = text.replace(quote, '')
     text = unidecode(text.upper()).replace('@', 'A').replace('\x7f', '')
     text = re_par1.sub('', text)
     text = re_par2.sub('', text)
@@ -970,6 +1130,9 @@ def cleanup(text: str) -> str:
         text = text.replace(part, '')
     text = text.replace('  ', ' ')
     text = text.replace('-', ' ')
+    text = text.replace('.', '')
+    for quote in "ʼ’‘ʻ`'":
+        text = text.replace(quote, '')
     return text.strip()
 
 
