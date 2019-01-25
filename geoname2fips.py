@@ -977,7 +977,7 @@ def cleanup(text: str) -> str:
     return text.strip()
 
 
-def search(rn, rd, c, e):
+def search(rn, rd, c, e, verbose=False):
     names = set()
     names.add(rn)
 
@@ -992,7 +992,7 @@ def search(rn, rd, c, e):
             rn = rn.replace(rd, '').strip()
             names.add(rn)
 
-    if c == os.environ.get('C'):
+    if c == os.environ.get('C') and verbose:
         print('\nSearching for {}:\n > {}'.format(', '.join(sorted(names)), ', '.join(sorted(e.keys()))))
 
     for n in names:
@@ -1082,13 +1082,13 @@ def correlate(locations, fips):
             region_division = region_divisions.get(fips_country_code)
             location = locations[country][location_name]
 
-            found = search(location_name, region_division, fips_country_code, entry)
+            found = search(location_name, region_division, fips_country_code, entry, verbose=True)
             if found is None:
                 city = search(location_name, region_division, fips_country_code, cities[country])
                 if city is not None:
                     region_name = cities[country][city]
                     region_name = REGION_REPLACE.get(fips_country_code, {}).get(region_name, region_name)
-                    found = search(region_name, region_division, fips_country_code, entry)
+                    found = search(region_name, region_division, fips_country_code, entry, verbose=True)
 
             if found is None:
                 if ignore_city(country, location_name) or ignore_region(country, location_name) or \
