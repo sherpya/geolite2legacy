@@ -2,3 +2,5 @@
 /.idea
 *.dat
 *.zip
+*.pyc
+__pycache__
