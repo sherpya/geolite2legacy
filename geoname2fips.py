@@ -24,10 +24,10 @@
 import os
 import re
 import csv
-import string
 import argparse
-import unicodedata
 from typing import Pattern
+# noinspection PyPackageRequirements
+from unidecode import unidecode
 
 from collections import defaultdict
 
@@ -959,17 +959,13 @@ re_par1 = re.compile(r'\([^()]*\)')
 re_par2 = re.compile(r'\[[^()]*\]')
 
 
-def only_printable(text):
-    return ''.join(x for x in unicodedata.normalize('NFKD', text) if x in string.printable)
-
-
 # FIXME: better
 def cleanup(text: str) -> str:
-    text = only_printable(text.upper())
-    text = re_par1.sub('', text)
-    text = re_par2.sub('', text)
     for quote in "ʼ’‘ʻ`'":
         text = text.replace(quote, '')
+    text = unidecode(text.upper()).replace('@', 'A').replace('\x7f', '')
+    text = re_par1.sub('', text)
+    text = re_par2.sub('', text)
     for part in ('THE ', ' THE', 'CITY OF '):
         text = text.replace(part, '')
     text = text.replace('  ', ' ')
