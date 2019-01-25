@@ -1024,6 +1024,12 @@ def parse_locations():
                 locations[country][city_name].add(geoname_id)
                 # noinspection PyTypeChecker
                 cities[country][city_name] = region
+
+                sub2_name = cleanup(row['subdivision_2_name'])
+                if sub2_name:
+                    # noinspection PyTypeChecker
+                    sub2[country][city_name] = sub2_name
+
         return locations
 
 
@@ -1091,6 +1097,16 @@ def correlate(locations, fips):
                     found = search(region_name, region_division, fips_country_code, entry, verbose=True)
 
             if found is None:
+                sub2_name = search(location_name, region_division, fips_country_code, sub2[country])
+                if sub2_name is not None:
+                    region_name = sub2[country][sub2_name]
+                    region_name = REGION_REPLACE.get(fips_country_code, {}).get(region_name, region_name)
+                    found = search(region_name, region_division, fips_country_code, entry, verbose=True)
+                    if found is None:
+                        fill(location, fips_country_code, '00')
+                        continue
+
+            if found is None:
                 if ignore_city(country, location_name) or ignore_region(country, location_name) or \
                         (region_name and ignore_region(country, region_name)):
                     if fips_country_code == os.environ.get('I'):
@@ -1129,6 +1145,7 @@ if __name__ == '__main__':
 
     geoid2fips = {}
     cities = defaultdict(dict)
+    sub2 = defaultdict(dict)
     region_divisions = DIVISION_OVERRIDE.copy()
 
     _locations = parse_locations()
