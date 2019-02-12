@@ -377,7 +377,7 @@ def main():
             sys.exit(1)
         output_encoding = opts.encoding
 
-    re_entry = re.compile(r'.*?/GeoLite2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
+    re_entry = re.compile(r'.*?/Geo(?:Lite|IP)2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
 
     entries = defaultdict(lambda: defaultdict(dict))
 
