@@ -138,6 +138,14 @@ class RadixTree(object):
         if locationsfile:
             for row in csv.DictReader(locationsfile):
                 geoname_id = row['geoname_id']
+                # Replace continent_code AS to AP country code (Asia/Pacific Region)
+                # This prevent collision with country code AS,"American Samoa"
+                # when country_iso_code is absent.
+                # See https://dev.maxmind.com/geoip/legacy/codes/iso3166/
+                continent_code = row['continent_code']
+                country_iso_code = row['country_iso_code']
+                if continent_code == "AS" and country_iso_code == "":
+                    row['continent_code'] = "AP"
                 locations[geoname_id] = row
 
         for nets, data in self.gen_nets(locations, outfile):
