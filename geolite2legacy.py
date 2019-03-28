@@ -24,6 +24,7 @@
 
 from __future__ import print_function
 
+import os
 import re
 import sys
 import csv
@@ -192,7 +193,7 @@ class RadixTree(object):
         f.write(struct.pack('B', 42))  # So long, and thanks for all the fish!
         f.write(b''.join(self.data_segments))
 
-        f.write(b'geolite2legacy.py')  # .dat file comment - can be anything
+        f.write(datfilecomment)  # .dat file comment - can be anything
         f.write(struct.pack('B', 0xff) * 3)
         f.write(struct.pack('B', self.edition))
         f.write(self.encode_rec(len(self.segments), self.segreclen))
@@ -331,7 +332,7 @@ class CountryRadixTree(RadixTree):
             f.write(self.serialize_node(node.rhs))
 
         f.write(struct.pack('B', 0x00) * 3)
-        f.write(b'geolite2legacy.py')  # .dat file comment - can be anything
+        f.write(datfilecomment)  # .dat file comment - can be anything
         f.write(struct.pack('B', 0xff) * 3)
         f.write(struct.pack('B', self.edition))
         f.write(self.encode_rec(len(self.segments), self.segreclen))
@@ -394,6 +395,9 @@ def main():
         print('More than one kind of database found, please check the archive')
         sys.exit(1)
 
+    global datfilecomment
+    datfilecomment=list(set([os.path.dirname(x) for x in ziparchive.namelist()]))[0] + b' converted to legacy MaxMind DB with geolite2legacy by sherpya'
+    
     dbtype, entries = entries.popitem()
 
     if dbtype == 'ASN':
