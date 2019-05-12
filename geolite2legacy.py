@@ -31,17 +31,18 @@ import struct
 import codecs
 import ipaddr
 import logging
-import pygeoip
 import argparse
 
 from time import time
 from zipfile import ZipFile
 from collections import defaultdict
 
+from pygeoip_const import *
+
 re_words = re.compile(r'\W+', re.U)
 
 
-cc_idx = dict((cc.lower(), i) for i, cc in enumerate(pygeoip.const.COUNTRY_CODES))
+cc_idx = dict((cc.lower(), i) for i, cc in enumerate(COUNTRY_CODES))
 cc_idx['cw'] = cc_idx['an']     # netherlands antilles / curacao
 cc_idx['uk'] = cc_idx['gb']     # uk / great britain
 cc_idx['sx'] = cc_idx['fx']     # st. martin?
@@ -200,9 +201,9 @@ class RadixTree(object):
 
 class ASNRadixTree(RadixTree):
     seek_depth = 31
-    edition = pygeoip.const.ASNUM_EDITION
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = ASNUM_EDITION
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
     def gen_nets(self, locations, infile):
         for row in csv.DictReader(infile):
@@ -218,16 +219,16 @@ class ASNRadixTree(RadixTree):
 
 class ASNv6RadixTree(ASNRadixTree):
     seek_depth = 127
-    edition = pygeoip.const.ASNUM_EDITION_V6
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = ASNUM_EDITION_V6
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
 
 class CityRev1RadixTree(RadixTree):
     seek_depth = 31
-    edition = pygeoip.const.CITY_EDITION_REV1
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = CITY_EDITION_REV1
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
     def gen_nets(self, locations, infile):
         for row in csv.DictReader(infile):
@@ -265,7 +266,7 @@ class CityRev1RadixTree(RadixTree):
         try:
             buf.append(struct.pack('B', cc_idx[country]))
         except KeyError:
-            logging.warning("'%s': missing country. update pygeoip.const.COUNTRY_CODES?", country)
+            logging.warning("'%s': missing country. update const.COUNTRY_CODES?", country)
             buf.append(struct.pack('B', cc_idx['']))
         buf.append(b'\0'.join((region, city, postal_code)))
         buf.append(b'\0')
@@ -280,16 +281,16 @@ class CityRev1RadixTree(RadixTree):
 
 class CityRev1v6RadixTree(CityRev1RadixTree):
     seek_depth = 127
-    edition = pygeoip.const.CITY_EDITION_REV1
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = CITY_EDITION_REV1
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
 
 class CountryRadixTree(RadixTree):
     seek_depth = 31
-    edition = pygeoip.const.COUNTRY_EDITION
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = COUNTRY_EDITION
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
     def gen_nets(self, locations, infile):
         for row in csv.DictReader(infile):
@@ -308,7 +309,7 @@ class CountryRadixTree(RadixTree):
     def serialize_node(self, node):
         if not node:
             # empty leaf
-            rec = pygeoip.const.COUNTRY_BEGIN
+            rec = COUNTRY_BEGIN
         elif isinstance(node, RadixTreeNode):
             # internal node
             rec = node.segment
@@ -319,10 +320,10 @@ class CountryRadixTree(RadixTree):
             try:
                 offset = cc_idx[cc.lower()]
             except KeyError:
-                logging.warning("'%s': missing country. update pygeoip.const.COUNTRY_CODES?", cc)
+                logging.warning("'%s': missing country. update const.COUNTRY_CODES?", cc)
                 offset = 0
             # data leaves directly encode cc index as an offset
-            rec = pygeoip.const.COUNTRY_BEGIN + offset
+            rec = COUNTRY_BEGIN + offset
         return self.encode_rec(rec, self.reclen)
 
     def serialize(self, f):
@@ -339,9 +340,9 @@ class CountryRadixTree(RadixTree):
 
 class Countryv6RadixTree(CountryRadixTree):
     seek_depth = 127
-    edition = pygeoip.const.COUNTRY_EDITION_V6
-    reclen = pygeoip.const.STANDARD_RECORD_LENGTH
-    segreclen = pygeoip.const.SEGMENT_RECORD_LENGTH
+    edition = COUNTRY_EDITION_V6
+    reclen = STANDARD_RECORD_LENGTH
+    segreclen = SEGMENT_RECORD_LENGTH
 
 
 RTree = {
