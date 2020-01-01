@@ -53,6 +53,7 @@ continent_codes = {'AS': 'AP'}
 
 geoname2fips = {}
 output_encoding = 'utf-8'
+datfilecomment = ''
 
 
 def serialize_text(text):
@@ -199,7 +200,7 @@ class RadixTree(object):
         f.write(struct.pack('B', 42))  # So long, and thanks for all the fish!
         f.write(b''.join(self.data_segments))
 
-        f.write(b'geolite2legacy.py')  # .dat file comment - can be anything
+        f.write(datfilecomment.encode('ascii'))  # .dat file comment - can be anything
         f.write(struct.pack('B', 0xff) * 3)
         f.write(struct.pack('B', self.edition))
         f.write(self.encode_rec(len(self.segments), self.segreclen))
@@ -366,6 +367,8 @@ def parse_fips(fipsfile):
 
 
 def main():
+    global datfilecomment
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
     parser.add_argument('-o', '--output-file', required=True, help='output GeoIP dat file')
@@ -401,6 +404,8 @@ def main():
         print('More than one kind of database found, please check the archive')
         sys.exit(1)
 
+    # noinspection PyUnboundLocalVariable
+    datfilecomment = '{} converted to legacy MaxMind DB with geolite2legacy'.format(os.path.dirname(entry.filename))
     dbtype, entries = entries.popitem()
 
     if dbtype == 'ASN':
