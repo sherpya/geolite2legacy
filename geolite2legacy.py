@@ -48,6 +48,8 @@ cc_idx['uk'] = cc_idx['gb']     # uk / great britain
 cc_idx['sx'] = cc_idx['fx']     # st. martin?
 cc_idx['xk'] = cc_idx['rs']     # kosovo -> serbia
 
+continent_codes = {'AS': 'AP'}
+
 geoname2fips = {}
 output_encoding = 'utf-8'
 
@@ -139,6 +141,9 @@ class RadixTree(object):
         if locationsfile:
             for row in csv.DictReader(locationsfile):
                 geoname_id = row['geoname_id']
+                # remap continent codes according to https://dev.maxmind.com/geoip/legacy/codes/iso3166/
+                continent_code = row['continent_code']
+                row['continent_code'] = continent_codes.get(continent_code, continent_code)
                 locations[geoname_id] = row
 
         for nets, data in self.gen_nets(locations, outfile):
