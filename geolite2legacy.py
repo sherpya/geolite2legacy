@@ -24,6 +24,7 @@
 
 from __future__ import print_function
 
+import os
 import re
 import sys
 import csv
@@ -428,11 +429,8 @@ def main():
         sys.exit(1)
 
     if dbtype != 'ASN':
-        if opts.fips_file:
-            parse_fips(opts.fips_file)
-        else:
-            print('You need to specify geoname2fips.csv file')
-            sys.exit(1)
+        fips_file = opts.fips_file or os.path.join(os.path.dirname(__file__), 'geoname2fips.csv')
+        parse_fips(fips_file)
 
     tstart = time()
     print('Database type {} - Blocks {} - Encoding: {}'.format(dbtype, opts.ipv6, output_encoding))
