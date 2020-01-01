@@ -367,7 +367,7 @@ def parse_fips(fipsfile):
 
 
 def main():
-    global datfilecomment
+    global output_encoding, datfilecomment
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
@@ -379,7 +379,6 @@ def main():
     opts = parser.parse_args()
 
     if opts.encoding:
-        global output_encoding
         try:
             codecs.lookup(opts.encoding)
         except LookupError as e:
