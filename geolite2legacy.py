@@ -281,7 +281,7 @@ class CityRev1RadixTree(RadixTree):
 
 class CityRev1v6RadixTree(CityRev1RadixTree):
     seek_depth = 127
-    edition = CITY_EDITION_REV1
+    edition = CITY_EDITION_REV1_V6
     reclen = STANDARD_RECORD_LENGTH
     segreclen = SEGMENT_RECORD_LENGTH
 
