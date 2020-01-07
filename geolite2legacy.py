@@ -358,6 +358,11 @@ RTree = {
     'ASN': {'IPv4': ASNRadixTree, 'IPv6': ASNv6RadixTree}
 }
 
+Filenames = {
+    'Country': {'IPv4': "GeoIP.dat", 'IPv6': "GeoIPv6.dat"},
+    'City': {'IPv4': "GeoIPCity.dat", 'IPv6': "GeoIPCityv6.dat"},
+    'ASN': {'IPv4': "GeoIPASNum.dat", 'IPv6': "GeoIPASNumv6.dat"}
+}
 
 def parse_fips(fipsfile):
     with open(fipsfile) as f:
@@ -371,7 +376,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
-    parser.add_argument('-o', '--output-file', required=True, help='output GeoIP dat file')
+    parser.add_argument('-o', '--output-file', help='output GeoIP dat file')
     parser.add_argument('-f', '--fips-file', help='geonameid to fips code mappings')
     parser.add_argument('-e', '--encoding', help='encoding to use for the output rather than utf-8')
     parser.add_argument('-d', '--debug', action='store_true', default=False, help='debug mode')
@@ -440,6 +445,10 @@ def main():
     print('Database type {} - Blocks {} - Encoding: {}'.format(dbtype, opts.ipv6, output_encoding))
 
     r.load(locs, TextIOWrapper(ziparchive.open(blocks, 'r'), encoding='utf-8'))
+
+    if not opts.output_file:
+        opts.output_file = Filenames[dbtype][opts.ipv6]
+        print('Output file {}'.format(opts.output_file))
 
     with open(opts.output_file, 'wb') as output:
         r.serialize(output)
