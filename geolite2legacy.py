@@ -433,7 +433,7 @@ def main():
         sys.exit(1)
 
     if dbtype != 'ASN':
-        fips_file = opts.fips_file or os.path.join(os.path.dirname(__file__), 'geoname2fips.csv')
+        fips_file = opts.fips_file or os.path.join(os.path.dirname(os.path.realpath(__file__)), 'geoname2fips.csv')
         parse_fips(fips_file)
 
     tstart = time()
