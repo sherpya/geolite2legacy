@@ -58,6 +58,8 @@ datfilecomment = ''
 
 def serialize_text(text):
     try:
+        if useunidecode and isinstance(text, unicode):
+            text = sys.modules['unidecode'].unidecode(text)
         return text.encode(output_encoding)
     except UnicodeEncodeError:
         print('Warning cannot encode {!r} using {}'.format(text, output_encoding))
@@ -372,13 +374,14 @@ def parse_fips(fipsfile):
 
 
 def main():
-    global output_encoding, datfilecomment
+    global output_encoding, datfilecomment, useunidecode
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', required=True, help='input zip file containings csv databases')
     parser.add_argument('-o', '--output-file', help='output GeoIP dat file')
     parser.add_argument('-f', '--fips-file', help='geonameid to fips code mappings')
     parser.add_argument('-e', '--encoding', help='encoding to use for the output rather than utf-8')
+    parser.add_argument('-u', '--unidecode', action='store_true', default=False, help='convert all names into plain ascii using unidecode module')
     parser.add_argument('-d', '--debug', action='store_true', default=False, help='debug mode')
     parser.add_argument('-6', '--ipv6', action='store_const', default='IPv4', const='IPv6', help='use ipv6 database')
     opts = parser.parse_args()
@@ -390,6 +393,10 @@ def main():
             print(e)
             sys.exit(1)
         output_encoding = opts.encoding
+
+    useunidecode = opts.unidecode
+    if useunidecode:
+        import unidecode
 
     re_entry = re.compile(r'.*?/Geo(?:Lite|IP)2-(?P<database>.*?)-(?P<filetype>.*?)-(?P<arg>.*)\.csv')
 
