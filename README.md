@@ -72,3 +72,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+### Run inside Docker container
+1. Build the Docker image:
+```bash
+docker build -t geolite2legacy .
+```
+2. This command assmes that you have downloaded the GeoLite2 database to the current directory.
+```bash
+docker run -it -v $(pwd):/src geoip2legacy:latest -i /src/GeoLite2-Country-CSV.zip -o /src/GeoIP.dat
+```
+
