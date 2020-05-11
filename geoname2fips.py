@@ -91,7 +91,7 @@ FIPS_COUNTRIES = {
     'COCOS ISLANDS': 'CK',
     'COLOMBIA': 'CO',
     'COMOROS': 'CN',
-    'CONGO': 'CG',
+    'DR CONGO': 'CG',  # renamed from 'CONGO' in GeoLite2-City-CSV_20200505
     'COOK ISLANDS': 'CW',
     'CORAL SEA ISLANDS': 'CR',
     'COSTA RICA': 'CS',
@@ -100,7 +100,7 @@ FIPS_COUNTRIES = {
     'CUBA': 'CU',
     'CYPRUS': 'CY',
     'CZECHIA': 'EZ',
-    'DEMOCRATIC REPUBLIC OF TIMOR LESTE': 'TT',
+    'EAST TIMOR': 'TT',  # renamed from 'DEMOCRATIC REPUBLIC OF TIMOR LESTE' in GeoLite2-City-CSV_20200505
     'DENMARK': 'DA',
     'DHEKELIA SOVEREIGN BASE AREA': 'DX',
     'DJIBOUTI': 'DJ',
@@ -180,7 +180,7 @@ FIPS_COUNTRIES = {
     'LIECHTENSTEIN': 'LS',
     'LUXEMBOURG': 'LU',
     'MACAO': 'MC',
-    'MACEDONIA': 'MK',
+    'NORTH MACEDONIA': 'MK',  # before 2019 'MACEDONIA'
     'MADAGASCAR': 'MA',
     'MALAWI': 'MI',
     'MALAYSIA': 'MY',
@@ -232,10 +232,10 @@ FIPS_COUNTRIES = {
     'PORTUGAL': 'PO',
     'PUERTO RICO': 'RQ',
     'QATAR': 'QA',
-    'REPUBLIC OF KOREA': 'KS',
+    'SOUTH KOREA': 'KS',  # renamed from 'REPUBLIC OF KOREA' in GeoLite2-City-CSV_20200505
     'REPUBLIC OF LITHUANIA': 'LH',
     'REPUBLIC OF MOLDOVA': 'MD',
-    'REPUBLIC OF CONGO': 'CF',
+    'CONGO REPUBLIC': 'CF',  # renamed from 'REPUBLIC OF CONGO' in GeoLite2-City-CSV_20200505
     'ROMANIA': 'RO',
     'RUSSIA': 'RS',
     'RWANDA': 'RW',
@@ -320,7 +320,7 @@ COUNTRY_IGNORE = (
     # empty in fips csv
     'AMERICAN SAMOA',
     'COOK ISLANDS',
-    'DEMOCRATIC REPUBLIC OF TIMOR LESTE',
+    'EAST TIMOR',
     'FRENCH POLYNESIA',
     'FRENCH SOUTHERN TERRITORIES',
     'HONG KONG',
@@ -355,7 +355,7 @@ COUNTRY_IGNORE = (
     'LIBERIA',
     'LIBYA',
     'LUXEMBOURG',
-    'MACEDONIA',
+    'NORTH MACEDONIA',
     'MALAWI',
     'MAURITANIA',
     'MEXICO',
@@ -372,8 +372,8 @@ COUNTRY_IGNORE = (
     'PHILIPPINES',
     'POLAND',
     'QATAR',
-    'REPUBLIC OF CONGO',
-    'REPUBLIC OF KOREA',
+    'CONGO REPUBLIC',
+    'SOUTH KOREA',
     'REPUBLIC OF LITHUANIA',
     'REPUBLIC OF MOLDOVA',
     'RUSSIA',
@@ -405,7 +405,7 @@ CITY_IGNORE = {
 
     'CZECHIA': ('CZECHIA',),  # city?
 
-    'CONGO': ('BOENDE',),
+    'DR CONGO': ('BOENDE',),
 
     'ESWATINI': ('ESWATINI',),  # city?
 }
