@@ -364,6 +364,7 @@ Filenames = {
     'ASN': {'IPv4': "GeoIPASNum.dat", 'IPv6': "GeoIPASNumv6.dat"}
 }
 
+
 def parse_fips(fipsfile):
     with open(fipsfile) as f:
         for row in csv.DictReader(f):
