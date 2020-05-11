@@ -1300,9 +1300,9 @@ def writecsv():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input-file', required=True, help='input csv fips 10-4 data file')
-    parser.add_argument('-o', '--output-file', required=True, help='output csv file')
-    parser.add_argument('-l', '--location-file', required=True, help='location file csv')
+    parser.add_argument('-i', '--input-file', required=True, help='input csv fips 10-4 data file (data.csv)')
+    parser.add_argument('-o', '--output-file', required=True, help='output csv file (geoname2fips.csv)')
+    parser.add_argument('-l', '--location-file', required=True, help='location file csv (GeoLite2-City-Locations-en.csv)')
     opts = parser.parse_args()
 
     geoid2fips = {}
