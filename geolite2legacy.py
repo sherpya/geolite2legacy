@@ -339,7 +339,7 @@ class CountryRadixTree(RadixTree):
             f.write(self.serialize_node(node.rhs))
 
         f.write(struct.pack('B', 0x00) * 3)
-        f.write(b'geolite2legacy.py')  # .dat file comment - can be anything
+        f.write(datfilecomment.encode('ascii'))  # .dat file comment - can be anything
         f.write(struct.pack('B', 0xff) * 3)
         f.write(struct.pack('B', self.edition))
         f.write(self.encode_rec(len(self.segments), self.segreclen))
