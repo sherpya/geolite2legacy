@@ -30,9 +30,15 @@ import sys
 import csv
 import struct
 import codecs
-import ipaddr
 import logging
 import argparse
+
+# python 2 ipaddr
+try:
+    from ipaddr import IPNetwork
+# python3 built-in ipaddress
+except:
+    from ipaddress import ip_network as IPNetwork
 
 from time import time
 from zipfile import ZipFile
@@ -106,7 +112,12 @@ class RadixTree(object):
 
     def __setitem__(self, net, data):
         self.netcount += 1
-        inet = int(net)
+        # python2 ipaddr
+        try:
+            inet = int(net)
+        # python3 built-in ipaddress
+        except:
+            inet = int(net.network_address)
         node = self.segments[0]
         for depth in range(self.seek_depth, self.seek_depth - (net.prefixlen - 1), -1):
             if inet & (1 << depth):
@@ -214,7 +225,7 @@ class ASNRadixTree(RadixTree):
 
     def gen_nets(self, locations, infile):
         for row in csv.DictReader(infile):
-            nets = [ipaddr.IPNetwork(row['network'])]
+            nets = [IPNetwork(row['network'])]
             org = decode_text(row['autonomous_system_organization'])
             asn = row['autonomous_system_number']
             entry = u'AS{} {}'.format(asn, org)
@@ -243,7 +254,7 @@ class CityRev1RadixTree(RadixTree):
             if location is None:
                 continue
 
-            nets = [ipaddr.IPNetwork(row['network'])]
+            nets = [IPNetwork(row['network'])]
             country_iso_code = location['country_iso_code'] or location['continent_code']
             fips_code = geoname2fips.get(location['geoname_id'])
             if fips_code is None:
@@ -305,7 +316,7 @@ class CountryRadixTree(RadixTree):
             if location is None:
                 continue
 
-            nets = [ipaddr.IPNetwork(row['network'])]
+            nets = [IPNetwork(row['network'])]
             country_iso_code = location['country_iso_code'] or location['continent_code']
             yield nets, (country_iso_code,)
 
