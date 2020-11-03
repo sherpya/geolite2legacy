@@ -221,7 +221,7 @@ class ASNRadixTree(RadixTree):
             yield nets, (serialize_text(entry),)
 
     def encode(self, data):
-        return data + b'\0'
+        return data + b'\0\0\0'
 
 
 class ASNv6RadixTree(ASNRadixTree):
