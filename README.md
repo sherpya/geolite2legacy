@@ -80,6 +80,6 @@ docker build -t geolite2legacy .
 ```
 2. This command assmes that you have downloaded the GeoLite2 database to the current directory.
 ```bash
-docker run -it -v $(pwd):/src geoip2legacy:latest -i /src/GeoLite2-Country-CSV.zip -o /src/GeoIP.dat
+docker run -it -v $(pwd):/src geolite2legacy:latest -i /src/GeoLite2-Country-CSV.zip -o /src/GeoIP.dat
 ```
 
