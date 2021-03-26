@@ -14,7 +14,7 @@ It's tested with python/pypy 2.7 and python 3.5+
 
 - Processing may be slow, expecially for City blocks, consider using pypy, it is a lot faster
 - Some software may expect iso-8859-1 encoded names, but the script will output utf-8,
-  you can force a different encoding e.g. using `-e iso-8859-1` but some name may result wrong  
+  you can force a different encoding e.g. using `-e iso-8859-1` but some name may result wrong
 
 ## Examples
 
@@ -23,7 +23,7 @@ $ ./geolite2legacy.py -i GeoLite2-Country-CSV.zip -f geoname2fips.csv -o GeoIP.d
 Database type Country - Blocks IPv4
 wrote 306385-node trie with 300679 networks (251 distinct labels) in 8 seconds
 
-# ./geolite2legacy.py -i GeoLite2-ASN-CSV.zip -o GeoIPASNum.dat 
+# ./geolite2legacy.py -i GeoLite2-ASN-CSV.zip -o GeoIPASNum.dat
 Database type ASN - Blocks IPv4
 wrote 518484-node trie with 417952 networks (62896 distinct labels) in 15 seconds
 ```
@@ -46,6 +46,20 @@ optional arguments:
                         encoding to use for the output rather than utf-8
   -d, --debug           debug mode
   -6, --ipv6            use ipv6 database
+```
+
+## Run inside Docker container
+
+1. Build the Docker image:
+
+```bash
+docker build -t geolite2legacy .
+```
+
+2. This command assmes that you have downloaded the GeoLite2 database to the current directory.
+
+```bash
+docker run -it -v $(pwd):/src geolite2legacy:latest -i /src/GeoLite2-Country-CSV.zip -o /src/GeoIP.dat
 ```
 
 ```text
@@ -72,14 +86,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-### Run inside Docker container
-1. Build the Docker image:
-```bash
-docker build -t geolite2legacy .
-```
-2. This command assmes that you have downloaded the GeoLite2 database to the current directory.
-```bash
-docker run -it -v $(pwd):/src geolite2legacy:latest -i /src/GeoLite2-Country-CSV.zip -o /src/GeoIP.dat
-```
-
